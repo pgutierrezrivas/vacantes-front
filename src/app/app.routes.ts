@@ -23,6 +23,7 @@ import { MisSolicitudesComponent } from "./pages/usuario/mis-solicitudes/mis-sol
 import { MisVacantesComponent } from "./pages/empresa/mis-vacantes/mis-vacantes.component";
 import { roleGuard } from './security/guards/role.guard';
 import { authGuard } from "./security/guards/auth.guard";
+import { PerfilUsuarioComponent } from "./pages/usuario/perfil-usuario/perfil-usuario.component";
 
 
 export const routes: Routes = [
@@ -55,6 +56,7 @@ export const routes: Routes = [
     { path: 'usuario/vacante/:id', component: DetalleVacanteComponent, canActivate: [roleGuard], data: { expectedRole: 'CLIENTE' } },
     { path: 'usuario/vacante/:id/postular', component: PostularVacanteComponent, canActivate: [roleGuard], data: { expectedRole: 'CLIENTE' } },
     { path: 'usuario/solicitudes/:id', component: MisSolicitudesComponent, canActivate: [roleGuard], data: { expectedRole: 'CLIENTE' } },
+    { path: 'usuario/perfil', component: PerfilUsuarioComponent, canActivate: [roleGuard], data: { expectedRole: 'CLIENTE' } },
   
     // rutas por defecto
     { path: '**', component: Page404Component },

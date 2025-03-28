@@ -1,0 +1,11 @@
+.navbar-nav .nav-item .nav-link {
+    font-size: 14px;
+    max-width: 150px;
+    margin: 5px ;
+    padding: 9px;
+    text-align: left;
+}
+
+.navbar-toggler {
+    color: transparent;
+}

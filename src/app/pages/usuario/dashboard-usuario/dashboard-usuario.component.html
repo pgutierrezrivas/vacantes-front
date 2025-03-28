@@ -1,1 +1,39 @@
-<p>dashboard-usuario works!</p>
+<section class="center text-center">
+    <div class="container">
+        <p class="fs-5 fw-semibold my-5">¡Hola {{miUsuario.nombre}}! ¿En qué podemos ayudarte hoy?</p>
+        <div class="row g-4">
+            <!-- card 1 -->
+            <div class="col-lg-4">
+                <a class="navbar-brand" [routerLink]="['/usuario/vacantes']">
+                    <div class="card shadow center p-3 text-center">
+                        <img src="images/busqueda.svg" alt="logo-text" class="w-100 mb-3" style="max-width: 320px;">
+                        <p class="pt-4 text-wrap">Explorar las vacantes existentes</p>
+                    </div>
+                </a>
+            </div>
+            <!-- card 2 -->
+            <div class="col-lg-4">
+                <a class="navbar-brand" [routerLink]="['/usuario/solicitudes/:id']">
+                    <div class="card shadow p-3 center text-center">
+                        <img src="images/postular.svg" alt="logo-text" class="w-100 mb-3" style="max-width: 320px;">
+                        <p class="pt-4 text-wrap">Consultar mis solicitudes realizadas</p>
+                    </div>
+                </a>
+            </div>
+            <!-- card 3 -->
+            <div class="col-lg-4 mb-5">
+                <a class="navbar-brand" [routerLink]="['/usuario/perfil']">
+                    <div class="card shadow p-3 center text-center">
+                        <img src="images/perfil.svg" alt="logo-text" class="w-100 mb-3" style="max-width: 320px;">
+                        <p class=" pt-4 text-wrap">Ir a mi perfil de datos personales</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <h3 class="fw-semibold title-green mt-4">Explora vacantes, postúlate y avanza en tu carrera profesional</h3>
+        <p class="text-muted mt-3">
+            Descubre nuevas oportunidades laborales y encuentra el empleo ideal para ti. Conéctate con empresas, postula a vacantes y da el siguiente paso en tu crecimiento profesional.
+        </p>
+        <img src="images/ok.svg" alt="logo-text" class="w-100 mb-3" style="max-width: 55px;">
+    </div>
+</section>

@@ -1,1 +1,48 @@
-<p>dashboard-empresa works!</p>
+<section class="center text-center">
+    <div class="container">
+        <p class="fs-5 fw-semibold my-5">¡Hola {{miUsuario.nombre}} {{miUsuario.apellidos}}! ¿En qué podemos ayudarte hoy?</p>
+        <div class="row g-4">
+            <!-- card 1 -->
+            <div class="col-lg-3">
+                <a class="navbar-brand" [routerLink]="['/empresa/vacante/nueva']">
+                    <div class="card shadow center p-3 text-center">
+                        <img src="images/subir.svg" alt="logo-text" class="w-100 mb-3" style="max-width: 320px;">
+                        <p class="pt-4 text-wrap">Publica nuevas vacantes</p>
+                    </div>
+                </a>
+            </div>
+            <!-- card 2 -->
+            <div class="col-lg-3">
+                <a class="navbar-brand" [routerLink]="['/empresa/vacantes']">
+                    <div class="card shadow p-3 center text-center">
+                        <img src="images/editar.svg" alt="logo-text" class="w-100 mb-3" style="max-width: 320px;">
+                        <p class="pt-4 text-wrap">Gestiona tus vacantes creadas</p>
+                    </div>
+                </a>
+            </div>            
+            <!-- card 3 -->
+            <div class="col-lg-3">
+                <a class="navbar-brand" [routerLink]="['/empresa/vacante/solicitudes/:id']">
+                    <div class="card shadow p-3 center text-center">
+                        <img src="images/solicitud.svg" alt="logo-text" class="w-100 mb-3" style="max-width: 320px;">
+                        <p class="pt-4 text-wrap">Gestiona tus solicitudes recibidas</p>
+                    </div>
+                </a>
+            </div>
+            <!-- card 4 -->
+            <div class="col-lg-3 mb-5">
+                <a class="navbar-brand" [routerLink]="['/empresa/perfil']">
+                    <div class="card shadow p-3 center text-center">
+                        <img src="images/perfil.svg" alt="logo-text" class="w-100 mb-3" style="max-width: 320px;">
+                        <p class=" pt-4 text-wrap">Ir a mi perfil de datos empresa</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <h3 class="fw-semibold title-green mt-4">Publica ofertas de empleo, gestiona candidaturas y encuentra el mejor talento</h3>
+        <p class="text-muted mt-3">
+            Optimiza tu proceso de contratación publicando ofertas de empleo y gestionando candidaturas de manera eficiente. Encuentra profesionales cualificados y haz crecer tu equipo con el mejor talento disponible.
+        </p>
+        <img src="images/ok.svg" alt="logo-text" class="w-100 mb-3" style="max-width: 55px;">
+    </div>
+</section>

@@ -1,1 +1,49 @@
-<p>dashboard-admin works!</p>
+<section class="center text-center">
+    <div class="container">
+        <p class="fs-5 fw-semibold my-5">¡Hola {{miUsuario.nombre}} {{miUsuario.apellidos}}! ¿En qué podemos ayudarte hoy?</p>
+        <div class="row g-4">
+            <!-- card 1 -->
+            <div class="col-lg-3">
+                <a class="navbar-brand" [routerLink]="['/admin/empresas']">
+                    <div class="card shadow center p-3 text-center">
+                        <img src="images/empresas.svg" alt="logo-text" class="w-100 mb-3" style="max-width: 320px;">
+                        <p class="pt-4 text-wrap">Gestión de empresas</p>
+                    </div>
+                </a>
+            </div>
+            <!-- card 2 -->
+            <div class="col-lg-3">
+                <a class="navbar-brand" [routerLink]="['/admin/categorias']">
+                    <div class="card shadow p-3 center text-center">
+                        <img src="images/categorias.svg" alt="logo-text" class="w-100 mb-3" style="max-width: 320px;">
+                        <p class="pt-4 text-wrap">Gestión de categorías</p>
+                    </div>
+                </a>
+            </div>            
+            <!-- card 3 -->
+            <div class="col-lg-3">
+                <a class="navbar-brand" [routerLink]="['/admin/usuarios']">
+                    <div class="card shadow p-3 center text-center">
+                        <img src="images/confirmar.svg" alt="logo-text" class="w-100 mb-3" style="max-width: 320px;">
+                        <p class="pt-4 text-wrap">Gestión de Usuarios</p>
+                    </div>
+                </a>
+            </div>
+            <!-- card 4 -->
+            <div class="col-lg-3 mb-5">
+                <a class="navbar-brand" [routerLink]="['/admin/admins']">
+                    <div class="card shadow p-3 center text-center">
+                        <img src="images/perfil.svg" alt="logo-text" class="w-100 mb-3" style="max-width: 320px;">
+                        <p class=" pt-4 text-wrap">Gestión de nuevos administradores</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <h3 class="fw-semibold title-green mt-4">Gestiona empresas, usuarios y categorías para mantener la plataforma organizada</h3>
+        <p class="text-muted mt-3">
+            Supervisa y gestiona la plataforma con total control. Da de alta nuevas empresas, administra usuarios y categorías de empleo.
+             Mantén el sistema seguro y eficiente, asegurando un entorno confiable para empresas y candidatos.
+        </p>
+        <img src="images/ok.svg" alt="logo-text" class="w-100 mb-3" style="max-width: 55px;">
+    </div>
+</section>
