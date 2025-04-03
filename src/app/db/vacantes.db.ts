@@ -17,7 +17,7 @@ export const VACANTES_DB: Vacante[] = [
     {
         id_vacante: 2,
         nombre: 'Especialista en Marketing Digital',
-        descripcion: 'Gestión de campañas en redes sociales y SEO',
+        descripcion: 'Conocimiento sobre gestión de campañas en redes sociales y SEO',
         fecha: new Date('2025-06-10'),
         salario: 35000,
         estatus: 'CREADA',
@@ -39,5 +39,44 @@ export const VACANTES_DB: Vacante[] = [
         detalles: 'Portafolio obligatorio que demuestre:\n- Procesos de diseño\n- Trabajo con prototipos\n- Pruebas con usuarios',
         id_Categoria: 3,
         id_empresa: 2
+    },
+    {
+        id_vacante: 4,
+        nombre: 'Analista de datos',
+        descripcion: 'Conocimientos sobre los analisis exaustivos de los datos de blabla',
+        fecha: new Date('2025-05-18'),
+        salario: 70000,
+        estatus: 'CREADA',
+        destacado: false,
+        imagen: 'images/vacante.jpg',
+        detalles: 'Portafolio obligatorio que demuestre:\n- Procesos de diseño\n- Trabajo con prototipos\n- Pruebas con usuarios',
+        id_Categoria: 1,
+        id_empresa: 1
+    },
+    {
+        id_vacante: 5,
+        nombre: 'Mentor de alumnos',
+        descripcion: 'Conocimiento requerido de gmail y basico a medio de llamadas telefonicas',
+        fecha: new Date('2025-05-20'),
+        salario: 10000,
+        estatus: 'CREADA',
+        destacado: false,
+        imagen: 'images/vacante.jpg',
+        detalles: 'Portafolio obligatorio que demuestre:\n- Procesos de diseño\n- Trabajo con prototipos\n- Pruebas con usuarios',
+        id_Categoria: 1,
+        id_empresa: 3
+    },
+    {
+        id_vacante: 6,
+        nombre: 'Desarrollador BackEnd',
+        descripcion: 'Conocimiento requerido de herramientas varias enfocadas en el backend',
+        fecha: new Date('2025-05-20'),
+        salario: 39000,
+        estatus: 'CREADA',
+        destacado: true,
+        imagen: 'images/vacante.jpg',
+        detalles: 'Portafolio obligatorio que demuestre:\n- Procesos de diseño\n- Trabajo con prototipos\n- Pruebas con usuarios',
+        id_Categoria: 2,
+        id_empresa: 1
     }
 ];

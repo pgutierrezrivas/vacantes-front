@@ -1,1 +1,56 @@
-<p>detalle-vacante works!</p>
+@if (vacante) {
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h3 class="mb-0">{{vacante.nombre}}</h3>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-4 fw-bold">Descripción:</div>
+                    <div class="col-8">{{vacante.descripcion}}</div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-4 fw-bold">Salario:</div>
+                    <div class="col-8"> {{vacante.salario.toLocaleString()}}</div>
+                </div>  
+
+                <div class="row mb-3">
+                    <div class="col-4 fw-bold">Fecha de publicacion:</div>
+                    <div class="col-8">{{vacante.fecha | date:'mediumDate'}}</div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-4 fw-bold">Estatus:</div>
+                    <div class="col-8">
+                        @switch (vacante.estatus) {
+                            @case('CREADA') {Abierta}
+                            @case('CUBIERTA') {Cubierta}
+                            @case('CANCELADA') {Cancelada}
+                            @default {Sin status}
+                        }
+                    </div>
+                </div>
+
+
+                <div class="row mb-3">
+                    <div class="col-4 fw-bold">Detalles:</div>
+                    <div class="col-8">
+                        <pre class="text-muted">{{ vacante.detalles }}</pre>
+                    </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <a [routerLink]="['/usuario/vacante', vacante.id_vacante, 'postular']" class="btn btn-warning">Postular</a>
+                    <a routerLink="/usuario/vacantes" class="btn btn-secondary">Volver a Vacantes</a>
+                </div>
+                </div>
+            </div>
+            }
+        @else {
+            <div class="container mt-4">
+                <div class="alert alert-danger">
+                Vacante no encontrada
+                </div>
+            </div>
+            }

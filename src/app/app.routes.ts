@@ -28,13 +28,13 @@ import { PerfilUsuarioComponent } from "./pages/usuario/perfil-usuario/perfil-us
 
 export const routes: Routes = [
 
-    // rutas publicas (leas añadimos el authGuard para que si un usuario ya esta logado no acceda de nuevo a ellas)
-    { path: 'home', component: HomeComponent, canActivate: [authGuard] },
+    // rutas publicas (les añadimos el authGuard para que si un usuario ya esta logado no acceda de nuevo a ellas)
+    { path: 'home', component: HomeComponent, canActivate: [authGuard] }, //aqui lo mismo que comentario lin37 pero en vez de roleGuard por AuthGuard
     { path: 'login', component: LoginComponent, canActivate: [authGuard] },
     { path: 'register', component: RegisterComponent, canActivate: [authGuard] },
   
     // rutas de Empresa (protegidas)
-    { path: 'empresa/dashboard', component: DashboardEmpresaComponent, canActivate: [roleGuard], data: { expectedRole: 'EMPRESA' } },
+    { path: 'empresa/dashboard', component: DashboardEmpresaComponent, canActivate: [roleGuard], data: { expectedRole: 'EMPRESA' } }, //si estas ya logueado entras por el roleGuard, se activara si se puede activar la guardia del rol
     { path: 'empresa/vacantes', component: MisVacantesComponent, canActivate: [roleGuard], data: { expectedRole: 'EMPRESA' } },
     { path: 'empresa/vacante/nueva', component: CrearVacanteComponent, canActivate: [roleGuard], data: { expectedRole: 'EMPRESA' } },
     { path: 'empresa/vacante/editar/:id', component: EditarVacanteComponent, canActivate: [roleGuard], data: { expectedRole: 'EMPRESA' } },
@@ -59,7 +59,8 @@ export const routes: Routes = [
     { path: 'usuario/perfil', component: PerfilUsuarioComponent, canActivate: [roleGuard], data: { expectedRole: 'CLIENTE' } },
   
     // rutas por defecto
-    { path: '**', component: Page404Component },
-    { path: '', pathMatch:'full', redirectTo: 'home'}
+    { path: '', pathMatch:'full', redirectTo: 'home'},
+    { path: '**', component: Page404Component } 
+    
   ];
   

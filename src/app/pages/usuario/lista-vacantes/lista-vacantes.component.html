@@ -1,1 +1,71 @@
-<p>lista-vacantes works!</p>
+<section>
+    <div class="container">
+    <h2 class="text-center fw-semibold mb-4">Ofertas de empleo</h2>
+
+    
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    placeholder="Buscar por nombre" 
+                    [(ngModel)]="filtroNombre"
+                >
+            </div>
+            <div class="col-md-4">
+                <select class="form-select" [(ngModel)]="filtroFecha">
+                    <option value="">Todas las fechas</option>
+                    <option value="reciente">Más recientes</option>
+                    <option value="antigua">Más antiguas</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select class="form-select" [(ngModel)]="filtroSalario">
+                    <option value="">Todos los salarios</option>
+                    <option value="mayor">Mayor salario</option>
+                    <option value="menor">Menor salario</option>
+                </select>
+            </div>
+        </div>
+
+
+
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+        @for (vacante of vacanteFiltrada; track vacante.id_vacante) {
+            <div class="col">
+            <div class="card h-100 d-flex flex-column shadow-sm">
+                <img [src]="vacante.imagen" class="card-img-top" alt="{{vacante.nombre}}"style="height: 200px; object-fit: cover;">
+                <div class="card-body flex-grow-1">
+                <h5 class="card-title fw-semibold">{{vacante.nombre}}</h5>
+                <p class="card-text">{{vacante.descripcion}}</p>
+                
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="badge bg-warning text-dark">
+                    ${{vacante.salario.toLocaleString()}}
+                </span>
+                @if(vacante.destacado) {
+                    <span class="badge bg-success">Destacado</span>
+                }
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">
+                    <i class="bi bi-calendar me-1"></i>
+                    {{vacante.fecha | date:'mediumDate'}}
+                </small>
+                <a [routerLink]="['/usuario/vacante', vacante.id_vacante]" class="btn btn-warning btn-sm">Ver más</a>
+                </div>
+            </div>
+            </div>
+        </div>
+        }
+    </div>
+    
+    @if(vacanteFiltrada.length === 0) {
+    <div class="alert alert-info text-center" role="alert">
+        No hay vacantes disponibles en este momento.
+        </div>
+    }
+    </div>
+</section>
