@@ -1,56 +1,60 @@
 @if (vacante) {
-    <div class="container mt-4">
-        <div class="card">
-            <div class="card-header bg-warning">
-                <h3 class="mb-0">{{vacante.nombre}}</h3>
-            </div>
-            <div class="card-body">
-                <div class="row mb-3">
-                    <div class="col-4 fw-bold">Descripción:</div>
-                    <div class="col-8">{{vacante.descripcion}}</div>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-warning">
+            <h4 class="mb-0">{{vacante.nombre}}</h4>
+        </div>
+        <div class="card-body p-4">
+            <div class="row">
+                <!-- imagen a la izquierda -->
+                <div class="col-lg-5 center">
+                    <img [src]="vacante.imagen" class="img-fluid" alt="{{vacante.nombre}}"
+                        style="width: 100%; max-height: 250px; object-fit: cover;">
                 </div>
-                
-                <div class="row mb-3">
-                    <div class="col-4 fw-bold">Salario:</div>
-                    <div class="col-8"> {{vacante.salario.toLocaleString()}}</div>
-                </div>  
-
-                <div class="row mb-3">
-                    <div class="col-4 fw-bold">Fecha de publicacion:</div>
-                    <div class="col-8">{{vacante.fecha | date:'mediumDate'}}</div>
-                </div>
-
-                <div class="row mb-3">
-                    <div class="col-4 fw-bold">Estatus:</div>
-                    <div class="col-8">
-                        @switch (vacante.estatus) {
+                <!-- información a la derecha -->
+                <div class="col-lg-7 p-4 pb-0">
+                    <div class="row mb-3">
+                        <div class="col-4 fw-bold">Descripción:</div>
+                        <div class="col-8">{{vacante.descripcion}}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-4 fw-bold">Salario:</div>
+                        <div class="col-8">{{vacante.salario.toLocaleString()}}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-4 fw-bold">Fecha de publicación:</div>
+                        <div class="col-8">{{vacante.fecha | date:'mediumDate'}}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-4 fw-bold">Estatus:</div>
+                        <div class="col-8">
+                            @switch (vacante.estatus) {
                             @case('CREADA') {Abierta}
                             @case('CUBIERTA') {Cubierta}
                             @case('CANCELADA') {Cancelada}
                             @default {Sin status}
-                        }
+                            }
+                        </div>
                     </div>
-                </div>
-
-
-                <div class="row mb-3">
-                    <div class="col-4 fw-bold">Detalles:</div>
-                    <div class="col-8">
-                        <pre class="text-muted">{{ vacante.detalles }}</pre>
+                    <div class="row mb-3">
+                        <div class="col-4 fw-bold">Detalles:</div>
+                        <div class="col-8">
+                            <pre class="text-muted">{{vacante.detalles}}</pre>
+                        </div>
                     </div>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between">
-                    <a [routerLink]="['/usuario/vacante', vacante.id_vacante, 'postular']" class="btn btn-warning">Postular</a>
-                    <a routerLink="/usuario/vacantes" class="btn btn-secondary">Volver a Vacantes</a>
-                </div>
                 </div>
             </div>
-            }
-        @else {
-            <div class="container mt-4">
-                <div class="alert alert-danger">
-                Vacante no encontrada
-                </div>
-            </div>
-            }
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+            <a [routerLink]="['/usuario/vacante', vacante.id_vacante, 'postular']" class="btn btn-yellow"><small>Postular</small></a>
+            <a routerLink="/usuario/vacantes" class="btn btn-secondary"><small>Volver a Vacantes</small></a>
+        </div>
+    </div>
+</div>
+} @else {
+<div class="container mt-4">
+    <div class="alert alert-danger">
+        Vacante no encontrada
+    </div>
+</div>
+}

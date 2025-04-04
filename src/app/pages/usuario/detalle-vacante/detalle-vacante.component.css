@@ -3,3 +3,13 @@ pre {
     font-family: inherit;
     font-size: inherit;
 }
+
+.btn-yellow {
+    background-color: #F9CA49;
+    border: 1px solid transparent;
+}
+
+.btn-yellow:hover {
+    background-color: transparent;
+    border: 1px solid #333;
+}

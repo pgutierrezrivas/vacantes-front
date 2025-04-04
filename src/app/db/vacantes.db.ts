@@ -9,7 +9,7 @@ export const VACANTES_DB: Vacante[] = [
         salario: 45000,
         estatus: 'CREADA',
         destacado: true,
-        imagen: 'images/vacante.jpg',
+        imagen: 'images/vacantes/vacante1.jpg',
         detalles: 'Experiencia mínima de 3 años en proyectos similares',
         id_Categoria: 1,
         id_empresa: 1
@@ -22,7 +22,7 @@ export const VACANTES_DB: Vacante[] = [
         salario: 35000,
         estatus: 'CREADA',
         destacado: false,
-        imagen: 'images/vacante.jpg',
+        imagen: 'images/vacantes/vacante2.jpg',
         detalles: 'Conocimientos avanzados en Google Analytics y Ads',
         id_Categoria: 2,
         id_empresa: 2
@@ -35,7 +35,7 @@ export const VACANTES_DB: Vacante[] = [
         salario: 38000,
         estatus: 'CREADA',
         destacado: true,
-        imagen: 'images/vacante.jpg',
+        imagen: 'images/vacantes/vacante3.jpg',
         detalles: 'Portafolio obligatorio que demuestre:\n- Procesos de diseño\n- Trabajo con prototipos\n- Pruebas con usuarios',
         id_Categoria: 3,
         id_empresa: 2
@@ -48,7 +48,7 @@ export const VACANTES_DB: Vacante[] = [
         salario: 70000,
         estatus: 'CREADA',
         destacado: false,
-        imagen: 'images/vacante.jpg',
+        imagen: 'images/vacantes/vacante4.jpg',
         detalles: 'Portafolio obligatorio que demuestre:\n- Procesos de diseño\n- Trabajo con prototipos\n- Pruebas con usuarios',
         id_Categoria: 1,
         id_empresa: 1
@@ -61,7 +61,7 @@ export const VACANTES_DB: Vacante[] = [
         salario: 10000,
         estatus: 'CREADA',
         destacado: false,
-        imagen: 'images/vacante.jpg',
+        imagen: 'images/vacantes/vacante5.jpg',
         detalles: 'Portafolio obligatorio que demuestre:\n- Procesos de diseño\n- Trabajo con prototipos\n- Pruebas con usuarios',
         id_Categoria: 1,
         id_empresa: 3
@@ -74,7 +74,7 @@ export const VACANTES_DB: Vacante[] = [
         salario: 39000,
         estatus: 'CREADA',
         destacado: true,
-        imagen: 'images/vacante.jpg',
+        imagen: 'images/vacantes/vacante6.jpg',
         detalles: 'Portafolio obligatorio que demuestre:\n- Procesos de diseño\n- Trabajo con prototipos\n- Pruebas con usuarios',
         id_Categoria: 2,
         id_empresa: 1

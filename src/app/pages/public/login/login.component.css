@@ -1,0 +1,25 @@
+input::placeholder {
+    font-size: 0.95rem;
+}
+
+.login-container {
+    border-radius: 1rem;
+    max-width: 370px;
+    width: 100%;
+}
+
+.error-container {
+    font-size: 0.80rem;
+    text-align: center;
+
+}
+
+.btn {
+    background-color: #F9CA49;
+    border: 1px solid transparent;
+}
+
+.btn:hover {
+    background-color: transparent;
+    border: 1px solid #333;
+}
