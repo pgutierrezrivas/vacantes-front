@@ -1,0 +1,38 @@
+.title-yellow {
+    color: #ffc107;
+}
+
+.form-label {
+    font-weight: 500;
+}
+
+textarea {
+    resize: none;
+}
+
+.btn-success {
+    background-color: #2a8d46;
+    border-color: #2a8d46;
+}
+
+.btn-success:hover {
+    background-color: #237a3e;
+    border-color: #237a3e;
+}
+
+.form-check-input:checked {
+    background-color: #2a8d46;
+    border-color: #2a8d46;
+}
+
+
+.ng-submitted .ng-invalid {
+    border-color: #dc3545;
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0%, 100% {transform: translateX(0);}
+    10%, 30%, 50%, 70%, 90% {transform: translateX(-5px);}
+    20%, 40%, 60%, 80% {transform: translateX(5px);}
+}

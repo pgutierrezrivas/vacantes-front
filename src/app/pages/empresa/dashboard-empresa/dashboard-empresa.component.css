@@ -1,4 +1,41 @@
+.center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .card {
-    min-height: 26em;
-    font-size: 1.05rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 10px;
+    cursor: pointer;
+    min-height: 300px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1)!important;
+}
+
+
+.title-green {
+    color: #2a8d46
+}
+
+a.navbar-brand {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 100%;
+}
+
+.text-wrap {
+    color: #333;
+    font-weight: 500;
+}
+
+@media (max-width: 992px) {
+    .card {
+        min-height: 250px;
+    }
 }

@@ -1,1 +1,111 @@
-<p>crear-vacante works!</p>
+    <div class="container py-4">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="title-yellow">Publicar Nueva Vacante</h2>
+            <p class="text-muted">Rellena el formulario para crear una nueva oferta de empleo</p>
+        </div>
+    </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form [formGroup]="vacanteForm" (ngSubmit)="onSubmit()">
+                    <div class="row g-3">
+            <!-- Nombre de la vacante -->
+            <div class="col-12 mb-3">
+              <label for="nombre" class="form-label">Título de la vacante *</label>
+            <input type="text" class="form-control" id="nombre" formControlName="nombre" placeholder="Ej: Desarrollador Full Stack Angular/Spring Boot">
+                @if (submitted && vacanteForm.get('nombre')?.errors) {
+                    <small class="text-danger">
+                @if (vacanteForm.get('nombre')?.errors?.['required']) {
+                    El título de la vacante es obligatorio
+                }
+                </small>
+                }
+            </div>
+
+            <!-- Categoría -->
+            <div class="col-md-6 mb-3">
+              <label for="categoria" class="form-label">Categoría *</label>
+                <select class="form-select" id="categoria" formControlName="id_Categoria">
+                    <option value="" disabled selected>Seleccione una categoría</option>
+            @for (categoria of categorias; track categoria.id_categoria) {
+                    <option [value]="categoria.id_categoria">{{ categoria.nombre }}</option>
+                }
+                </select>
+            @if (submitted && vacanteForm.get('id_Categoria')?.errors) {
+                <small class="text-danger">
+            @if (vacanteForm.get('id_Categoria')?.errors?.['required']) {
+                    Debe seleccionar una categoría
+                }
+                </small>
+                }
+            </div>
+
+            <!-- Salario -->
+            <div class="col-md-6 mb-3">
+              <label for="salario" class="form-label">Salario anual (€) *</label>
+            <input type="number" class="form-control" id="salario" formControlName="salario" placeholder="Ej: 35000">
+                @if (submitted && vacanteForm.get('salario')?.errors) {
+                    <small class="text-danger">
+                    @if (vacanteForm.get('salario')?.errors?.['required']) {
+                    El salario es obligatorio
+                } @else if (vacanteForm.get('salario')?.errors?.['min']) {
+                    El salario debe ser mayor a 0
+                }
+                </small>
+                }
+            </div>
+
+            <!-- Descripción breve -->
+            <div class="col-12 mb-3">
+              <label for="descripcion" class="form-label">Descripción breve *</label>
+                <textarea class="form-control" id="descripcion" formControlName="descripcion" rows="3"placeholder="Breve descripción de la vacante (máx. 500 caracteres)"></textarea>
+            @if (submitted && vacanteForm.get('descripcion')?.errors) {
+                <small class="text-danger">
+                @if (vacanteForm.get('descripcion')?.errors?.['required']) {
+                    La descripción es obligatoria
+                    } @else if (vacanteForm.get('descripcion')?.errors?.['maxlength']) {
+                    La descripción no puede exceder los 500 caracteres
+                }
+                </small>
+            }
+            </div>
+
+            <!-- Detalles completos -->
+            <div class="col-12 mb-3">
+              <label for="detalles" class="form-label">Detalles completos *</label>
+            <textarea class="form-control" id="detalles" formControlName="detalles" rows="6"placeholder="Requisitos, responsabilidades y beneficios detallados"></textarea>
+                @if (submitted && vacanteForm.get('detalles')?.errors) {
+                    <small class="text-danger">
+                    @if (vacanteForm.get('detalles')?.errors?.['required']) {
+                    Los detalles son obligatorios
+                    }
+                </small>
+                }
+            </div>
+
+            <!-- Imagen -->
+            <div class="col-md-8 mb-3">
+                <label for="imagen" class="form-label">URL de imagen de la vacante</label>
+                    <input type="text" class="form-control" id="imagen" formControlName="imagen" placeholder="Ej: images/vacantes/mi-vacante.jpg"></div>
+
+            <!-- Destacado -->
+            <div class="col-md-4 mb-3 d-flex align-items-end">
+                <div class="form-check form-switch mt-3">
+                    <input class="form-check-input" type="checkbox" id="destacado" formControlName="destacado">
+                    <label class="form-check-label" for="destacado">Destacar esta vacante</label>
+                </div>
+            </div>
+
+            <div class="col-12 mt-4">
+                <hr>
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
+                    <button type="submit" class="btn btn-warning">Publicar Vacante</button>
+                </div>
+                </div>
+            </div>
+            </form>
+        </div>
+        </div>
+    </div>

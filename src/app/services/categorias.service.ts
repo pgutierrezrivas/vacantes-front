@@ -13,8 +13,12 @@ export class CategoriasService {
     this.arrCategorias = CATEGORIAS_DB;
   }
 
-  getAllCategorias() : Categoria[] {
+  getAllCategorias(): Categoria[] {
     return this.arrCategorias;
+  }
+
+  getCategoriaById(id: number): Categoria |undefined {
+    return this.arrCategorias.find(cat => cat.id_categoria === id);
   }
 
 }

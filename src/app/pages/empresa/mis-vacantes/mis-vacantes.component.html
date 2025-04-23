@@ -1,1 +1,142 @@
-<p>mis-vacantes works!</p>
+
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="title-yellow">Gestiona tus Vacantes</h2>
+            <p class="text-muted">Administra las ofertas de empleo que has publicado</p>
+        </div>
+    </div>
+
+
+    <!-- Filtros -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6 mb-2">
+                    <div class="input-group">
+                        <span class="input-group-text">
+                        <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" class="form-control" placeholder="Buscar por nombre o descripción..." [(ngModel)]="filtroBusqueda" (input)="aplicarFiltros()">
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-2">
+                    <select class="form-select" [(ngModel)]="filtroEstatus" (change)="aplicarFiltros()">
+                        <option value="TODAS">Todas las vacantes</option>
+                        <option value="CREADA">Activas</option>
+                        <option value="CUBIERTA">Cubiertas</option>
+                        <option value="CANCELADA">Canceladas</option>
+                    </select>
+                </div>
+                <div class="col-md-2 mb-2">
+                    <button class="btn btn-warning w-100" [routerLink]="['/empresa/vacante/nueva']">
+                        <i class="bi bi-plus-circle me-1">Nueva</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Listado de vacantes -->
+@if (vacantesFiltradas.length > 0) {
+    <div class="row">
+        @for (vacante of vacantesFiltradas; track vacante.id_vacante) {
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center" [ngClass]="{
+                            'bg-success text-white': vacante.estatus === 'CREADA',
+                            'bg-primary text-white': vacante.estatus === 'CUBIERTA',
+                            'bg-secondary text-white': vacante.estatus === 'CANCELADA'
+                        }">
+                        <h5 class="card-title mb-0">
+                            @if (vacante.destacado) {
+                                <i class="bi bi-star-fill text-warning me-2"></i>
+                            }
+                            {{vacante.nombre}}
+                        </h5>
+                        <span class="badge bg-light text-dark">
+                            {{vacante.estatus}}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img [src]="vacante.imagen || 'images/vacantes/default.jpg'" class="img-fluid rounded mb-3" alt="Imagen de la vacante">
+                            </div>
+                            <div class="col-md-8">
+                                <p class="card-text">{{vacante.descripcion}}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span><strong>Salario:</strong> {{vacante.salario | currency:'EUR':'symbol':'1.0-0'}}</span>
+                                    <span><strong>Fecha:</strong> {{vacante.fecha | date:'dd/MM/yyyy'}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-light">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Cambiar estado</button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" (click)="cambiarEstadoVacante(vacante, 'CREADA')">Activa</a></li>
+                                    <li><a class="dropdown-item" (click)="cambiarEstadoVacante(vacante, 'CUBIERTA')">Cubierta</a></li>
+                                    <li><a class="dropdown-item" (click)="cambiarEstadoVacante(vacante, 'CANCELADA')">Cancelada</a></li>
+                                </ul>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-info text-white" [routerLink]="['/empresa/vacante/solicitudes', vacante.id_vacante]">
+                                    <i class="bi bi-people-fill me-1"></i> Solicitudes
+                                </button>
+                                <button class="btn btn-sm btn-warning" [routerLink]="['/empresa/vacante/editar', vacante.id_vacante]">
+                                    <i class="bi bi-pencil-fill me-1"></i> Editar
+                                </button>
+                                <button class="btn btn-sm btn-danger" (click)="eliminarVacante(vacante.id_vacante, vacante.nombre)">
+                                    <i class="bi bi-trash-fill me-1"></i> Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+} @else {
+    <div class="card shadow-sm">
+        <div class="card-body text-center py-5">
+            <img src="images/empty.svg" alt="No hay vacantes" class="mb-3" style="max-width: 150px;">
+            <h4>No hay vacantes disponibles</h4>
+            <p class="text-muted">
+                @if (filtroEstatus !== 'TODAS' || filtroBusqueda !== '') {
+                    No se encontraron vacantes con los filtros aplicados
+                } @else {
+                    Aún no has publicado ninguna vacante
+                }
+            </p>
+            <button class="btn btn-warning mt-3" [routerLink]="['/empresa/vacante/nueva']">
+                <i class="bi bi-plus-circle me-1"></i> Crear nueva vacante
+            </button>
+        </div>
+    </div>
+}
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
