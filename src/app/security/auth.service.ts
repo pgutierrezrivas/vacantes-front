@@ -1,55 +1,120 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { BehaviorSubject, Observable, of, tap, catchError, map } from 'rxjs';
 import { Usuario } from '../interfaces/usuario';
-import { USUARIOS_DB } from '../db/usuarios.db';
+import { environment } from '../enviroments/environment.development';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  router = inject(Router);
-  usuario = signal<Usuario | null>(null); // usamos signal para gestionar el usuario autenticado
+  private router = inject(Router);
+  private http = inject(HttpClient);
+
+  private _usuario = new BehaviorSubject<Usuario | null>(null);
+  usuario$ = this._usuario.asObservable();
+
+  private apiUrl = `${environment.apiUrlPublic}/auth`;
+
+  // ⚠️ Almacenar la contraseña en memoria: aún así es riesgoso
+  private _password: string | null = null;
 
   constructor() {
-    // intentamos cargar el usuario desde localStorage al inicializar el servicio
+    this.loadUserFromLocalStorage();
+  }
+
+  private loadUserFromLocalStorage(): void {
     const storedUser = localStorage.getItem('usuario');
     if (storedUser) {
-      this.usuario.set(JSON.parse(storedUser)); // establecemos el usuario en la señal
+      try {
+        const user = JSON.parse(storedUser);
+        this._usuario.next(user);
+      } catch (error) {
+        console.error('Error parsing user from localStorage:', error);
+        localStorage.removeItem('usuario');
+        this._usuario.next(null);
+      }
     }
   }
 
-  // metodo para logearse
-  login(email: string, password: string): boolean {
-    const user = USUARIOS_DB.find(u => u.email === email && u.password === `{noop}${password}`);
-    if (user) {
-      this.usuario.set(user);
-      localStorage.setItem('usuario', JSON.stringify(user)); // guardamos el usuario en localStorage
-      return true;
-    }
-    return false;
+  signup(userData: Omit<Usuario, 'fecha_Registro' | 'enabled'>): Observable<boolean> {
+    return this.http.post<Usuario>(`${this.apiUrl}/signup`, userData).pipe(
+      map(user => {
+        const formattedUser: Usuario = {
+          ...user,
+          fecha_Registro: new Date(user.fecha_Registro),
+          enabled: user.enabled ? 1 : 0,
+        };
+        this._usuario.next(formattedUser);
+        localStorage.setItem('usuario', JSON.stringify(formattedUser));
+        return true;
+      }),
+      catchError((error) => {
+        console.error('Signup failed:', error);
+        return of(false);
+      })
+    );
   }
 
-  // metodo para cerrar sesión
+  login(email: string, password: string): Observable<boolean> {
+    // guardamos credenciales para el interceptor…
+    this._usuario.next({ email, nombre: '', apellidos: '', password: '', enabled: 1, fecha_Registro: new Date(), rol: null });
+    this._password = password;
+  
+    return this.http.get(`${this.apiUrl}/login`, {
+      observe: 'response',
+      responseType: 'text'
+    }).pipe(
+      map(resp => resp.status === 200),
+      catchError(err => {
+        console.error('Login failed:', err);
+        this.logout();
+        return of(false);
+      })
+    );
+  }
+  
+
+
   logout(): void {
-    this.usuario.set(null);
+    this._usuario.next(null);
+    this._password = null;
     localStorage.removeItem('usuario');
     this.router.navigate(['/login']);
   }
 
-  // metodo para obtener el usuario
-  getUsuario(): Usuario | null {
-    return this.usuario();
+  getUsuario(): Observable<Usuario | null> {
+    return this.usuario$;
   }
 
-  // metodo para obtener el rol
-  getRol(): string | null {
-    return this.usuario()?.rol || null;
+  getRol(): Observable<string | null> {
+    return this.usuario$.pipe(map(user => user?.rol || null));
   }
 
-  // metodo para comprobar si esta autenticado
-  isAuthenticated(): boolean {
-    return this.usuario() !== null;
+  isAuthenticated(): Observable<boolean> {
+    return this.usuario$.pipe(map(user => !!user?.enabled));
   }
+
+  getUsername(): string | null {
+    return this._usuario.value?.email || null;
+  }
+
+  getPassword(): string | null {
+    return this._password;
+  }
+
+  /** Método para obtener el header Authorization con Basic */
+  getBasicAuthHeader(): string | null {
+    const username = this.getUsername();
+    const password = this.getPassword();
+    if (username && password) {
+      const credentials = btoa(`${username}:${password}`);
+      const header = `Basic ${credentials}`;
+      console.log('Authorization Header:', header); // 👈 añade esto para verificar
+      return header;
+    }
+    return null;
+  }
+  
 }
-
-

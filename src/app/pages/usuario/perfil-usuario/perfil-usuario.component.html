@@ -12,23 +12,23 @@
           
           <div class="row mb-3">
             <div class="col-5 fw-bold">Nombre:</div>
-            <div class="col-7">{{ usuario?.nombre }} {{ usuario?.apellidos }}</div>
+            <div class="col-7">{{ (usuario$ | async)?.nombre }} {{ (usuario$ | async)?.apellidos }}</div>
         </div>
         
         <div class="row mb-3">
             <div class="col-5 fw-bold">Correo Electrónico:</div>
-            <div class="col-7">{{ usuario?.email }}</div>
+            <div class="col-7">{{ (usuario$ | async)?.email }}</div>
         </div>
         
         <div class="row mb-3">
             <div class="col-5 fw-bold">Fecha de Registro:</div>
-            <div class="col-7">{{ usuario?.fecha_Registro | date:'mediumDate' }}</div>
+            <div class="col-7">{{ (usuario$ | async)?.fecha_Registro | date:'mediumDate' }}</div>
         </div>
         
         <div class="row mb-3">
             <div class="col-5 fw-bold">Rol:</div>
                 <div class="col-7">
-            @switch(usuario?.rol) {
+            @switch((usuario$ | async)?.rol) {
                 @case('CLIENTE') { Usuario }
                 @case('EMPRESA') { Empresa }
                 @case('ADMON') { Administrador }

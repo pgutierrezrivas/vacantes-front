@@ -19,30 +19,32 @@ export class LoginComponent {
   error: string | null = null;
 
   login(): void {
-
-    const isAuthenticated = this.authService.login(this.email, this.password);
-
-    if (isAuthenticated) {
-
-      const rol = this.authService.getRol(); // obtenemos el rol despues de autenticarse
-
-      // y redirigimos a su dashboard correspondiente segun rol
-      switch (rol) {
-        case 'ADMON':
-          this.router.navigate(['/admin/dashboard']);
-          break;
-        case 'EMPRESA':
-          this.router.navigate(['/empresa/dashboard']);
-          break;
-        case 'CLIENTE':
-          this.router.navigate(['/usuario/dashboard']);
-          break;
-        default:
-          this.router.navigate(['/login']); // si el rol no es valido, redirigimos a login
-          break;
+    this.authService.login(this.email, this.password).subscribe(success => {
+      console.log('¿Login exitoso?', success);
+  
+      if (success) {
+        this.authService.getRol().subscribe(rol => {
+          console.log('Rol obtenido:', rol);
+  
+          switch (rol) {
+            case 'ADMON':
+              this.router.navigate(['/admin/dashboard']);
+              break;
+            case 'EMPRESA':
+              this.router.navigate(['/empresa/dashboard']);
+              break;
+            case 'CLIENTE':
+              this.router.navigate(['/usuario/dashboard']);
+              break;
+            default:
+              this.router.navigate(['/login']);
+              break;
+          }
+        });
+      } else {
+        this.error = 'Correo o contraseña incorrectos';
+        console.warn('Login fallido');
       }
-    } else {
-      this.error = 'Correo o contraseña incorrectos';
-    }
+    });
   }
 }
