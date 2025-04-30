@@ -46,7 +46,9 @@
             </div>
         </div>
         <div class="card-footer d-flex justify-content-between">
-            <a [routerLink]="['/usuario/vacante', vacante.id_vacante, 'postular']" class="btn btn-yellow"><small>Postular</small></a>
+            <!-- boton postular -->
+            <app-postular-form></app-postular-form>
+            <!-- boton volver -->
             <a routerLink="/usuario/vacantes" class="btn btn-secondary"><small>Volver a Vacantes</small></a>
         </div>
     </div>

@@ -12,39 +12,39 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './lista-vacantes.component.css'
 })
 export class ListaVacantesComponent {
-vacantes: Vacante[] = VACANTES_DB
-filtroNombre: string = '';
-filtroFecha: 'reciente' | 'antigua' | '' = '';
-filtroSalario: 'mayor' | 'menor' |'' = '';
+  vacantes: Vacante[] = VACANTES_DB
+  filtroNombre: string = '';
+  filtroFecha: 'reciente' | 'antigua' | '' = '';
+  filtroSalario: 'mayor' | 'menor' | '' = '';
 
 
-get vacanteFiltrada(): Vacante[] {
-  let resultado = this.vacantes
+  get vacanteFiltrada(): Vacante[] {
+    let resultado = this.vacantes
 
 
-  //filtrado por nombre
-  if (this.filtroNombre) {
-    resultado = resultado.filter(vacante =>
-      vacante.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase())
-    );
+    //filtrado por nombre
+    if (this.filtroNombre) {
+      resultado = resultado.filter(vacante =>
+        vacante.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase())
+      );
+    }
+
+    //filtro por fecha
+    if (this.filtroFecha === 'reciente') {
+      resultado = resultado.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
+    } else if (this.filtroFecha === 'antigua') {
+      resultado = resultado.sort((a, b) => a.fecha.getTime() - b.fecha.getTime());
+    }
+
+
+    //filtro por salario 
+    if (this.filtroSalario === 'mayor') {
+      resultado = resultado.sort((a, b) => b.salario - a.salario)
+    } else if (this.filtroSalario === 'menor') {
+      resultado = resultado.sort((a, b) => a.salario - b.salario);
+    }
+
+
+    return resultado;
   }
-
-  //filtro por fecha
-  if (this.filtroFecha === 'reciente') {
-    resultado = resultado.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
-  } else if (this.filtroFecha === 'antigua') {
-    resultado = resultado.sort((a, b) => a.fecha.getTime() - b.fecha.getTime());
-  }
-
-
-  //filtro por salario 
-  if (this.filtroSalario === 'mayor'){
-    resultado = resultado.sort((a, b) => b.salario - a.salario)
-  } else if (this.filtroSalario === 'menor') {
-    resultado = resultado.sort((a, b) => a.salario - b.salario);
-  }
-
-
-  return resultado;
-}
 }

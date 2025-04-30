@@ -18,12 +18,12 @@ import { ListaUsuariosComponent } from "./pages/admin/lista-usuarios/lista-usuar
 import { ListaAdministradoresComponent } from "./pages/admin/lista-administradores/lista-administradores.component";
 import { DashboardUsuarioComponent } from "./pages/usuario/dashboard-usuario/dashboard-usuario.component";
 import { DetalleVacanteComponent } from "./pages/usuario/detalle-vacante/detalle-vacante.component";
-import { PostularVacanteComponent } from "./pages/usuario/postular-vacante/postular-vacante.component";
 import { MisSolicitudesComponent } from "./pages/usuario/mis-solicitudes/mis-solicitudes.component";
 import { MisVacantesComponent } from "./pages/empresa/mis-vacantes/mis-vacantes.component";
 import { roleGuard } from './security/guards/role.guard';
 import { authGuard } from "./security/guards/auth.guard";
 import { PerfilUsuarioComponent } from "./pages/usuario/perfil-usuario/perfil-usuario.component";
+import { PostularFormComponent } from "./components/postular-form/postular-form.component";
 
 
 export const routes: Routes = [
@@ -54,7 +54,7 @@ export const routes: Routes = [
     { path: 'usuario/dashboard', component: DashboardUsuarioComponent, canActivate: [roleGuard], data: { expectedRole: 'CLIENTE' } },
     { path: 'usuario/vacantes', component: ListaVacantesComponent, canActivate: [roleGuard], data: { expectedRole: 'CLIENTE' } },
     { path: 'usuario/vacante/:id', component: DetalleVacanteComponent, canActivate: [roleGuard], data: { expectedRole: 'CLIENTE' } },
-    { path: 'usuario/vacante/:id/postular', component: PostularVacanteComponent, canActivate: [roleGuard], data: { expectedRole: 'CLIENTE' } },
+    { path: 'usuario/vacante/:id/postular', component: PostularFormComponent, canActivate: [roleGuard], data: { expectedRole: 'CLIENTE' } },
     { path: 'usuario/solicitudes/:id', component: MisSolicitudesComponent, canActivate: [roleGuard], data: { expectedRole: 'CLIENTE' } },
     { path: 'usuario/perfil', component: PerfilUsuarioComponent, canActivate: [roleGuard], data: { expectedRole: 'CLIENTE' } },
   
