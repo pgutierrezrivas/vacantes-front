@@ -115,6 +115,5 @@ export class AuthService {
       return header;
     }
     return null;
-  }
-  
+  }  
 }

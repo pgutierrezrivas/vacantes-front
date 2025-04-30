@@ -39,7 +39,7 @@ export class UsuariosService {
       map(user => ({
         ...user,
         fecha_Registro: new Date(user.fecha_Registro),
-        enabled: !!user.enabled, // Interpreta 'enabled' como booleano
+        enabled: user.enabled ? 1 : 0, // Ensure 'enabled' is a number (1 for true, 0 for false)
       })),
       catchError((error) => {
         console.error(`Error fetching usuario with ID ${id}:`, error);
