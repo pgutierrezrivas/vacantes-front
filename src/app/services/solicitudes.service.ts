@@ -21,7 +21,7 @@ export class SolicitudesService {
     return this.arrSolicitudes;
   }
 
-  /*// GET
+  // GET
   getAll(): Observable<Solicitud[]> {
     return this.httpClient.get<Solicitud[]>(this.apiURL); // todo esto hace la llamada y devuelve un observable
   }
@@ -39,9 +39,9 @@ export class SolicitudesService {
   // DELETE
   delete(id_solicitud: string): Observable<Solicitud> {
     return this.httpClient.delete<Solicitud>(`${this.apiURL}/${id_solicitud}`);
-  }*/
+  }
 
-  getSolicitudesByVacanteId(vacanteId : number): Solicitud[] {
+  /*getSolicitudesByVacanteId(vacanteId : number): Solicitud[] {
     return this.arrSolicitudes.filter(solicitud => solicitud.id_Vacante === vacanteId);
   }
 
@@ -78,6 +78,6 @@ export class SolicitudesService {
       return true;
     }
     return false;
-  }
+  }*/
 
 }
