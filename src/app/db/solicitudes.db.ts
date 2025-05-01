@@ -7,7 +7,7 @@ export const SOLICITUDES_DB: Solicitud[] = [
       archivo: 'cv_ana_fullstack.pdf',
       comentarios: 'Tengo experiencia en los tecnologías requeridas',
       estado: 0,
-      curriculum: 'linkedin.com/anaperez',
+      curriculum: 'https://acortar.link/WhGtDS',
       id_Vacante: 1,
       email: 'usuario1@reto.com'
     }

@@ -16,7 +16,7 @@ export class MisSolicitudesComponent {
 
   constructor(
     private solicitudService: SolicitudesService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     //obtenemos el id del usuario del localStorage
@@ -32,5 +32,19 @@ export class MisSolicitudesComponent {
     //obtenemos todas las solicitudes de un usuario determinado
     this.solicitudes = this.solicitudService.getSolicitudesByUserEmail(this.idUsuario);
   }
+
+  anularSolicitud(id: number): void {
+    const confirmacion = confirm("¿Quieres anular esta solicitud?");
+    if (!confirmacion) return;
+
+    const resultado = this.solicitudService.eliminarSolicitud(id);
+    if (resultado) {
+      // actualizamos las solicitudes en el componente
+      this.cargarSolicitudes();
+    } else {
+      alert("No se pudo anular la solicitud.");
+    }
+  }
+
 
 }

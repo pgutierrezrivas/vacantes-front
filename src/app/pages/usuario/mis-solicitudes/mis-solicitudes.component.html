@@ -1,47 +1,68 @@
-<div class="container mt-4">
-    <h2 class="mb-4">Mis Solicitudes</h2>
-  
-    @if (solicitudes.length > 0; as solicitudesList) {
-      <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-          <tr>
-            <th>ID</th>
-            <th>Fecha</th>
-            <th>Archivo</th>
-            <th>Comentarios</th>
-            <th>Estado</th>
-            <th>Currículum</th>
-            <th>Vacante</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (solicitud of solicitudes; track solicitud.id_solicitud) {
-            <tr>
-              <td>{{ solicitud.id_solicitud }}</td>
-              <td>{{ solicitud.fecha}}</td>
-              <td>
-                <a [href]="solicitud.archivo" target="_blank">Ver archivo</a>
-              </td>
-              <td>{{ solicitud.comentarios || '-' }}</td>
-              <td>
-                <span class="badge" [ngClass]="{
-                  'bg-secondary': solicitud.estado === 0,
-                  'bg-success': solicitud.estado === 1
+<div class="container">
+  <div class="row mb-4">
+    <div class="col-12">
+      <h2 class="fw-semibold title-green">Gestiona tus solicitudes</h2>
+      <p class="text-muted">Administra las solicitudes que has enviado para las distintas ofertas de empleo</p>
+    </div>
+  </div>
+
+  <!-- listado de solicitudes -->
+  @if (solicitudes.length > 0) {
+  <div class="row">
+    @for (solicitud of solicitudes; track solicitud.id_solicitud) {
+    <div class="col-lg-6 mb-4 mx-auto">
+      <div class="card shadow-sm h-100">
+        <div class="card-body px-4">
+          <h5 class="card-title text-success mt-3 mb-4 fw-semibold">Solicitud realizada</h5>
+          <div class="pb-4">
+            <h6>Fecha</h6>
+            {{ solicitud.fecha | date : "dd/MM/yyyy" }}
+          </div>
+          <div class="pb-4">
+            <h6>Archivo</h6>
+            <a [href]="solicitud.archivo" target="_blank">Ver archivo</a>
+          </div>
+          <div class="pb-4">
+            <h6>Comentarios</h6>
+            {{ solicitud.comentarios || "-" }}
+          </div>
+          <div class="pb-4">
+            <h6>Estado</h6>
+            <span class="badge fw-medium" [ngClass]="{
+                  'bg-success': solicitud.estado === 0,
+                  'bg-secondary': solicitud.estado === 1
                 }">
-                  {{ solicitud.estado === 0 ? 'Presentada' : 'Adjudicada' }}
-                </span>
-              </td>
-              <td>
-                <a [href]="solicitud.curriculum" target="_blank">Ver CV</a>
-              </td>
-              <td>
-                <a [routerLink]="['/vacante', solicitud.id_Vacante]">Ver vacante</a>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    } @else {
-      <p>No has realizado ninguna solicitud aún.</p>
+              {{ solicitud.estado === 0 ? "Presentada" : "Adjudicada" }}
+            </span>
+          </div>
+          <div class="pb-2">
+            <h6>Currículum</h6>
+            <a [href]="solicitud.curriculum" target="_blank">Ver curriculum</a>
+          </div>
+          <div class="card-footer bg-white text-center border-0">
+            <a [routerLink]="['/usuario/vacante', solicitud.id_Vacante]"
+              class="btn btn-warning btn-sm my-3 mx-2"><small>Vacante asociada</small></a>
+            <button (click)="anularSolicitud(solicitud.id_solicitud)" class="btn btn-danger btn-sm mx-2">
+              <small>Anular solicitud</small>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     }
-  </div>  
+  </div>
+  } @else {
+  <div class="card shadow-sm mt-5">
+    <div class="card-body text-center pb-5">
+      <img src="images/empty.svg" alt="No hay solicitudes" class="mb-4" style="max-width: 120px;">
+      <h4>No hay solicitudes disponibles</h4>
+      <p class="text-muted">
+        Aún no has realizado ninguna solicitud
+      </p>
+      <button class="btn btn-warning mt-3" [routerLink]="['/usuario/vacantes']">
+        <i class="bi bi-search me-1"></i> Ver listado vacantes
+      </button>
+    </div>
+  </div>
+  }
+</div>

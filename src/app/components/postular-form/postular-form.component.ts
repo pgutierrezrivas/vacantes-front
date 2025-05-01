@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SolicitudesService } from '../../services/solicitudes.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -13,12 +13,14 @@ import { CommonModule } from '@angular/common';
   styleUrl: './postular-form.component.css'
 })
 export class PostularFormComponent {
+
+  @Input() idVacante: number | null = null;
+
   router = inject(Router);
   activatedRoute = inject(ActivatedRoute);
   solicitudService = inject(SolicitudesService);
 
   idUsuario: string = '';
-  idVacante: number | null = null;
 
   postularForm: FormGroup;
 
@@ -60,12 +62,6 @@ export class PostularFormComponent {
     }
   }
 
-  // funcion generica para poder hacer el control del formulario
-  checkControl(formControlName: string, validator: string): boolean | undefined {
-    return (this.postularForm.get(formControlName)?.hasError(validator) &&
-    this.postularForm.get(formControlName)?.touched)
-  }
-
   getDataForm(): void {
     // obtenemos los valores del formulario
     const formValue: Solicitud = this.postularForm.value as Solicitud;
@@ -80,13 +76,17 @@ export class PostularFormComponent {
       id_Vacante: this.idVacante!,
       email: formValue.email
     };
-    
 
     if (this.postularForm.valid) {
       try {
         this.solicitudService.agregarSolicitud(nuevaSolicitud);
-        console.log(nuevaSolicitud);
+        console.log('Solicitud realizada: ', nuevaSolicitud);
         alert('Solicitud creada correctamente');
+
+        // cerrar el modal haciendo clic en el botón cerrar
+        this.cancelar();
+
+        // navegar después de cerrar el modal
         this.router.navigate(['/usuario/vacantes']);
       } catch (error) {
         console.error('Error al crear la solicitud: ', error);
@@ -97,4 +97,16 @@ export class PostularFormComponent {
       alert('Formulario no válido. Por favor, revise todos los campos')
     }
   }
+
+  cancelar(): void {
+    const closeBtn = document.getElementById('btnCloseModal');
+    closeBtn?.click();
+  }
+
+  // funcion generica para poder hacer el control del formulario
+  checkControl(formControlName: string, validator: string): boolean | undefined {
+    return (this.postularForm.get(formControlName)?.hasError(validator) &&
+    this.postularForm.get(formControlName)?.touched)
+  }
+
 }

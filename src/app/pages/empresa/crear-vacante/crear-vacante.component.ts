@@ -9,7 +9,7 @@ import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-crear-vacante',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './crear-vacante.component.html',
   styleUrl: './crear-vacante.component.css'
 })

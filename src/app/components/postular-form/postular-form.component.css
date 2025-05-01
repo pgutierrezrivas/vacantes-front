@@ -1,0 +1,12 @@
+.modal-dialog {
+    min-width: 50%;
+}
+
+.modal-content {
+    padding: 20px;
+}
+
+.title-green {
+    color: #2a8d46
+}
+
