@@ -1,13 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Vacante } from '../../../interfaces/vacante';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterModule } from '@angular/router';
 import { VACANTES_DB } from '../../../db/vacantes.db';
-import { PostularFormComponent } from "../../../components/postular-form/postular-form.component";
 
 @Component({
   selector: 'app-detalle-vacante',
-  imports: [CommonModule, RouterModule, PostularFormComponent],
+  imports: [CommonModule, RouterModule, RouterLink],
   templateUrl: './detalle-vacante.component.html',
   styleUrl: './detalle-vacante.component.css'
 })

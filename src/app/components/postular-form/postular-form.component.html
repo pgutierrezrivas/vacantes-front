@@ -1,66 +1,59 @@
-<!-- formulario dentro de un modal https://getbootstrap.com/docs/4.0/components/modal/ -->
-<!-- button trigger modal -->
-<button type="button" class="btn btn-dark px-3" data-bs-toggle="modal" 
-data-bs-target="#staticBackdrop">
-    <small>Postular</small>
-</button>
-<!-- modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" 
-data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header border-end-0">
-                <h6 class="modal-title text-uppercase" id="staticBackdropLabel">
-                    Formulario postular vacante</h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" 
-                aria-label="Close"></button>
-            </div>
-            <div class="modal-body" style="font-size:small;">
-                <form [formGroup]="postularForm" (ngSubmit)="getDataForm()">
-                    <!-- apartado cv -->
-                    <div class="form-group row my-2">
-                        <label for="curriculum" class="col-form-label col-sm-3">Curriculum (URL):</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control form-control-sm" id="curriculum" 
-                            name="curriculum" placeholder="Introduce URL de tu curriculum" 
-                            formControlName="curriculum">
-                        </div>
-                        @if(checkControl('curriculum', 'required')){
-                            <div class="text-danger">Campo requerido</div>
-                        }
-                        @if(checkControl('curriculum', 'pattern')){
-                            <div class="text-danger">La URL introducida no es válida</div>
-                        }
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="title-yellow">Publicar Nueva Vacante</h2>
+            <p class="text-muted">Rellena el formulario para crear una nueva oferta de empleo</p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form [formGroup]="postularForm" (ngSubmit)="getDataForm()">
+                <!-- apartado archivo -->
+                <div class="form-group row my-2">
+                    <label for="archivo" class="col-form-label col-sm-3">Archivo (URL): <span class="text-danger">*</span></label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control form-control-sm" id="archivo" name="archivo"
+                            placeholder="Introduce URL de tu archivo" formControlName="archivo">
                     </div>
-                    <!-- apartado comentarios -->
-                    <div class="form-group row my-2">
-                        <label for="comentarios" class="col-form-label col-sm-3">
-                            Comentarios:</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control form-control-sm" 
-                            id="comentarios" name="comentarios" placeholder="Introduce la descripción" formControlName="comentarios">
-                        </div>
-                        @if(postularForm.get('comentarios')?.invalid && postularForm.get('comentarios')?.touched){
-                            <div class="text-danger">Los comentarios deben tener entre 10 y 100 caracteres</div>
-                        }
-                        @if(checkControl('comentarios', 'required')){
-                            <div class="text-danger">Campo requerido</div>
-                        }
-                        @if(checkControl('comentarios', 'minlength')){
-                            <div class="text-danger">El nombre debe tener al menos 10 
-                                caracteres</div>
-                        }
-                        @if(checkControl('comentarios', 'maxlength')){
-                            <div class="text-danger">La descripción debe tener 100 
-                                caracteres como máximo</div>
-                            }
+                    @if(checkControl('archivo', 'required')){
+                    <div class="text-danger">Campo requerido</div>
+                    }
+                    @if(checkControl('archivo', 'pattern')){
+                    <div class="text-danger">La URL introducida no es válida</div>
+                    }
+                </div>
+                <!-- apartado cv -->
+                <div class="form-group row my-2">
+                    <label for="curriculum" class="col-form-label col-sm-3">Curriculum (URL):</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control form-control-sm" id="curriculum" name="curriculum"
+                            placeholder="Introduce URL de tu curriculum" formControlName="curriculum">
                     </div>
-                    <!-- boton submit formulario -->
-                    <input type="submit" value="Enviar" class="btn btn-primary my-2 
-                    fw-semibold px-4" style="font-size:small;" 
-                    [disabled]="!postularForm.valid">
-                </form>
-            </div>
+                    @if(checkControl('curriculum', 'pattern')){
+                    <div class="text-danger">La URL introducida no es válida</div>
+                    }
+                </div>
+                <!-- apartado comentarios -->
+                <div class="form-group row my-2">
+                    <label for="comentarios" class="col-form-label col-sm-3">
+                        Comentarios:</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control form-control-sm" id="comentarios" name="comentarios"
+                            placeholder="Introduce tus comentarios" formControlName="comentarios">
+                    </div>
+                    @if(checkControl('comentarios', 'minlength')){
+                    <div class="text-danger">El nombre debe tener al menos 10
+                        caracteres</div>
+                    }
+                    @if(checkControl('comentarios', 'maxlength')){
+                    <div class="text-danger">Los comentarios deben tener entre 10 y 100 caracteres</div>
+                    }
+                </div>
+                <!-- boton submit formulario -->
+                <input type="submit" value="Enviar" class="btn btn-primary my-2 
+                    fw-semibold px-4" style="font-size:small;" [disabled]="!postularForm.valid">
+            </form>
         </div>
     </div>
 </div>

@@ -4,7 +4,7 @@ export interface Solicitud {
     archivo: string;
     comentarios?: string;
     estado: number; // 0: presentada, 1: adjudicada
-    curriculum: string;
+    curriculum?: string;
     id_Vacante: number;
     email: string;
 }

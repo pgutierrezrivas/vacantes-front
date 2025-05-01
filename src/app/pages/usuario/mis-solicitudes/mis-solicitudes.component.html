@@ -1,1 +1,47 @@
-<p>mis-solicitudes works!</p>
+<div class="container mt-4">
+    <h2 class="mb-4">Mis Solicitudes</h2>
+  
+    @if (solicitudes.length > 0; as solicitudesList) {
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Fecha</th>
+            <th>Archivo</th>
+            <th>Comentarios</th>
+            <th>Estado</th>
+            <th>Currículum</th>
+            <th>Vacante</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (solicitud of solicitudes; track solicitud.id_solicitud) {
+            <tr>
+              <td>{{ solicitud.id_solicitud }}</td>
+              <td>{{ solicitud.fecha}}</td>
+              <td>
+                <a [href]="solicitud.archivo" target="_blank">Ver archivo</a>
+              </td>
+              <td>{{ solicitud.comentarios || '-' }}</td>
+              <td>
+                <span class="badge" [ngClass]="{
+                  'bg-secondary': solicitud.estado === 0,
+                  'bg-success': solicitud.estado === 1
+                }">
+                  {{ solicitud.estado === 0 ? 'Presentada' : 'Adjudicada' }}
+                </span>
+              </td>
+              <td>
+                <a [href]="solicitud.curriculum" target="_blank">Ver CV</a>
+              </td>
+              <td>
+                <a [routerLink]="['/vacante', solicitud.id_Vacante]">Ver vacante</a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else {
+      <p>No has realizado ninguna solicitud aún.</p>
+    }
+  </div>  

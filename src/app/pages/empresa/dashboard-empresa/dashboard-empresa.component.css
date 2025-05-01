@@ -9,7 +9,7 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border-radius: 10px;
     cursor: pointer;
-    min-height: 300px;
+    min-height: 26rem;
 }
 
 .card:hover {
@@ -36,6 +36,6 @@ a.navbar-brand {
 
 @media (max-width: 992px) {
     .card {
-        min-height: 250px;
+        min-height: 20rem;
     }
 }

@@ -9,7 +9,6 @@ export const SOLICITUDES_DB: Solicitud[] = [
       estado: 0,
       curriculum: 'linkedin.com/anaperez',
       id_Vacante: 1,
-      email: 'cliente1@reto.com'
+      email: 'usuario1@reto.com'
     }
   ];
-  
