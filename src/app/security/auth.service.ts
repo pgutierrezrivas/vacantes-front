@@ -64,7 +64,7 @@ export class AuthService {
     //AÑADIDA CONST BODY
     const body = { email, password };
 
-    return this.http.post<Usuario>(`¢{this.apiUrl}/login`, body).pipe(
+    return this.http.post<Usuario>(`${this.apiUrl}/login`, body).pipe(
       tap(user => {
         // Guardamos usuario completo (ya viene con rol, enabled...)
         this._usuario.next(user);
