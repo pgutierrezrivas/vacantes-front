@@ -60,46 +60,34 @@ export class AuthService {
   //HACIENDO CAMBIOS EN LOGIN PARA AJUSTAR AL NUEVO LOGIN DEL AUTHENTICATION
   // CONTROLLER EN SPRING
   login(email: string, password: string): Observable<boolean> {
-
-    //AÑADIDA CONST BODY
     const body = { email, password };
-
-    return this.http.post<Usuario>(`${this.apiUrl}/login`, body).pipe(
-      tap(user => {
-        // Guardamos usuario completo (ya viene con rol, enabled...)
-        this._usuario.next(user);
-        this._password = password; // para e interceptor
-        localStorage.setItem('usuario', JSON.stringify(user));
-      }),
-      map(() => true),
-      catchError(err => {
-        console.error('Login failed:', err);
-        this.logout();
-        return of(false);
-      })
-    )
   
-    // comentamos esto que va con GET como el antiguo login y adaptamos a POST
-   /* 
-   // guardamos credenciales para el interceptor…
-    this._usuario.next({ email, nombre: '', apellidos: '', password: '', enabled: 1, fecha_Registro: new Date(), rol: null });
-    this._password = password;
-
-   return this.http.get(`${this.apiUrl}/login`, {
+    return this.http.post(`${this.apiUrl}/login`, body, {
       observe: 'response',
       responseType: 'text'
     }).pipe(
-      map(resp => resp.status === 200),
+      tap(response => {
+        const user: Usuario = {
+          email,
+          nombre: '',
+          apellidos: '',
+          password: '',
+          enabled: 1,
+          fecha_Registro: new Date(),
+          rol: 'CLIENTE' // puedes mejorarlo luego
+        };
+        this._usuario.next(user);
+        this._password = password;
+        localStorage.setItem('usuario', JSON.stringify(user));
+      }),
+      map(response => response.status === 200),
       catchError(err => {
         console.error('Login failed:', err);
         this.logout();
         return of(false);
       })
     );
-  */
-  }
-  
-
+  }  
 
   logout(): void {
     this._usuario.next(null);
