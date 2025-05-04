@@ -20,25 +20,31 @@
             </div>
             <div class="modal-body">
                 <form [formGroup]="postularForm" (ngSubmit)="getDataForm()">
-                    <!-- apartado archivo -->
+                    <!-- apartado curriculum -->
                     <div class="form-group mb-3">
-                        <label for="archivo" class="form-label fw-semibold">Archivo (URL) <span class="text-danger">*</span></label>
+                        <label for="curriculum" class="form-label fw-semibold">Curriculum (URL) <span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-sm" id="curriculum" name="curriculum"
+                            placeholder="Introduce URL de tu curriculum" formControlName="curriculum">
+
+                        @if(checkControl('curriculum', 'required')){
+                        <div class="text-danger">Campo requerido</div>
+                        }
+                        @if(checkControl('curriculum', 'pattern')){
+                        <div class="text-danger">La URL introducida no es válida</div>
+                        }
+                    </div>
+
+                     <!-- apartado archivo -->
+                     <div class="form-group mb-3">
+                        <label for="archivo" class="form-label fw-semibold">Portafolio, carta de presentación o certificados (URL) <span
+                                class="text-danger">*</span></label>
                         <input type="text" class="form-control form-control-sm" id="archivo" name="archivo"
                             placeholder="Introduce URL de tu archivo" formControlName="archivo">
                         @if(checkControl('archivo', 'required')){
                         <div class="text-danger">Campo requerido</div>
                         }
                         @if(checkControl('archivo', 'pattern')){
-                        <div class="text-danger">La URL introducida no es válida</div>
-                        }
-                    </div>
-
-                    <!-- apartado curriculum -->
-                    <div class="form-group mb-3">
-                        <label for="curriculum" class="form-label fw-semibold">Curriculum (URL)</label>
-                        <input type="text" class="form-control form-control-sm" id="curriculum" name="curriculum"
-                            placeholder="Introduce URL de tu curriculum" formControlName="curriculum">
-                        @if(checkControl('curriculum', 'pattern')){
                         <div class="text-danger">La URL introducida no es válida</div>
                         }
                     </div>

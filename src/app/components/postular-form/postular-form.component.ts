@@ -38,6 +38,7 @@ export class PostularFormComponent {
         Validators.maxLength(100),
       ]),
       curriculum: new FormControl('', [
+        Validators.required,
         Validators.pattern('https?://.+'),
       ]),
       id_Vacante: new FormControl(null, []), // valor neutro

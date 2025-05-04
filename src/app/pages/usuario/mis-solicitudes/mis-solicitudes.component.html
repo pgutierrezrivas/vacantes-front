@@ -15,7 +15,7 @@
         <div class="card-body px-4">
           <h5 class="card-title text-success mt-3 mb-4 fw-semibold">Solicitud realizada</h5>
           <div class="pb-4">
-            <h6>Fecha</h6>
+            <h6>Fecha de solicitud</h6>
             {{ solicitud.fecha | date : "dd/MM/yyyy" }}
           </div>
           <div class="pb-4">
@@ -24,7 +24,7 @@
           </div>
           <div class="pb-4">
             <h6>Comentarios</h6>
-            {{ solicitud.comentarios || "-" }}
+            {{ solicitud.comentarios || "No se ha realizado ningún comentario" }}
           </div>
           <div class="pb-4">
             <h6>Estado</h6>
@@ -37,7 +37,11 @@
           </div>
           <div class="pb-2">
             <h6>Currículum</h6>
-            <a [href]="solicitud.curriculum" target="_blank">Ver curriculum</a>
+            @if (solicitud.curriculum) {
+              <a [href]="solicitud.curriculum" target="_blank">Ver curriculum</a>
+            } @else {
+              <span>No se ha adjuntado ningún curriculum</span>
+            }
           </div>
           <div class="card-footer bg-white text-center border-0">
             <a [routerLink]="['/usuario/vacante', solicitud.id_Vacante]"
