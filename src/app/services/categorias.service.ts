@@ -7,6 +7,7 @@ import { Categoria } from '../interfaces/categoria';
 })
 export class CategoriasService {
 
+
   private arrCategorias : Categoria[];
 
   constructor() { 
@@ -19,6 +20,13 @@ export class CategoriasService {
 
   getCategoriaById(id: number): Categoria |undefined {
     return this.arrCategorias.find(cat => cat.id_categoria === id);
+  }
+
+  crearCategoria(categoriaActual: Categoria) {
+    throw new Error('Method not implemented.');
+  }
+  actualizarCategoria(categoriaActual: Categoria) {
+    throw new Error('Method not implemented.');
   }
 
 }

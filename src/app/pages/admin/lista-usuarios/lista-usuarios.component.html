@@ -1,1 +1,153 @@
-<p>lista-usuarios works!</p>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-white py-3">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h5 class="card-title mb-0 fw-bold">Gestión de Usuarios</h5>
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-link text-dark" 
+                                    data-bs-toggle="modal" data-bs-target="#infoUsuariosModal">
+                                <i class="bi bi-question-circle" style="font-size: 1.6rem;">?</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                                <input type="text" class="form-control" placeholder="Buscar por email o nombre..." 
+                                        (input)="aplicarFiltro($event)">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" [(ngModel)]="filtroRol" (change)="aplicarFiltroRol()">
+                                <option value="">Todos los roles</option>
+                                <option value="CLIENTE">Cliente</option>
+                                <option value="EMPRESA">Empresa</option>
+                                <option value="ADMON">Administrador</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" [(ngModel)]="filtroEstado" (change)="aplicarFiltroEstado()">
+                                <option value="">Todos</option>
+                                <option value="1">Activos</option>
+                                <option value="0">Inactivos</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Rol</th>
+                                    <th scope="col">Estado</th>
+                                    <th scope="col">Fecha Registro</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (usuario of usuariosFiltrados; track usuario.email) {
+                                    <tr>
+                                        <td>{{ usuario.email }}</td>
+                                        <td>{{ usuario.nombre }} {{ usuario.apellidos }}</td>
+                                        <td>
+                                            <span class="badge" 
+                                                    [ngClass]="{'bg-primary': usuario.rol === 'CLIENTE', 
+                                                                'bg-success': usuario.rol === 'EMPRESA', 
+                                                                'bg-danger': usuario.rol === 'ADMON'}">
+                                                {{ usuario.rol }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge" [ngClass]="{'bg-success': usuario.enabled === 1, 'bg-danger': usuario.enabled === 0}">
+                                                {{ usuario.enabled === 1 ? 'Activo' : 'Inactivo' }}
+                                            </span>
+                                        </td>
+                                        <td>{{ usuario.fecha_Registro | date:'dd/MM/yyyy' }}</td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <button *ngIf="usuario.enabled === 1" 
+                                                        class="btn btn-sm btn-warning me-1" 
+                                                        (click)="abrirModalDesactivar(usuario)"
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#desactivarUsuarioModal">
+                                                    <i class="bi bi-person-x"></i> Desactivar
+                                                </button>
+                                                <button *ngIf="usuario.enabled === 0" 
+                                                        class="btn btn-sm btn-success me-1" 
+                                                        (click)="activarUsuario(usuario.email)">
+                                                    <i class="bi bi-person-check"></i> Activar
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                                @empty {
+                                    <tr>
+                                        <td colspan="6" class="text-center py-3">
+                                            <p class="mb-0 text-muted">No hay usuarios disponibles con los filtros aplicados</p>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="infoUsuariosModal" tabindex="-1" aria-labelledby="infoUsuariosModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="infoUsuariosModalLabel">Información de Usuarios</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="card-text">Gestiona los usuarios del sistema desde este panel. Puedes activar o desactivar usuarios según sea necesario.</p>
+                <p class="card-text">Recuerda que los usuarios desactivados no podrán iniciar sesión hasta que sean activados nuevamente.</p>
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    La desactivación de un usuario no elimina sus datos del sistema, solo impide su acceso pasando el enable = 0. 
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="desactivarUsuarioModal" tabindex="-1" aria-labelledby="desactivarUsuarioModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="desactivarUsuarioModalLabel">Desactivar Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if (usuarioSeleccionado) {
+                    <p>¿Estás seguro de que deseas desactivar el usuario <strong>{{ usuarioSeleccionado.nombre }} {{ usuarioSeleccionado.apellidos }}</strong> ({{ usuarioSeleccionado.email }})?</p>
+                    <p class="text-danger">El usuario no podrá iniciar sesión una vez desactivado.</p>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" (click)="desactivarUsuario()" data-bs-dismiss="modal">Desactivar</button>
+            </div>
+        </div>
+    </div>
+</div>

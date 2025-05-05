@@ -1,0 +1,49 @@
+/* Estilos para el formulario de crear empresa */
+
+.card {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .card-header {
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .form-label {
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+  
+  .form-control:focus, .form-select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+  
+  .text-danger {
+    font-size: 0.8rem;
+  }
+  
+  textarea.form-control {
+    resize: none;
+  }
+  
+  .btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+  }
+  
+  .btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+  }
+  
+  .btn-outline-secondary {
+    color: #6c757d;
+    border-color: #6c757d;
+  }
+  
+  .btn-outline-secondary:hover {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+  }
