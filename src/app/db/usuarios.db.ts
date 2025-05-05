@@ -27,5 +27,14 @@ export const USUARIOS_DB: Usuario[] = [
         enabled: 1,
         fecha_Registro: new Date('2024-04-05'),
         rol: 'CLIENTE'
+    },
+    {
+        email: 'usuarioTest@reto.com',
+        nombre: 'Mateo',
+        apellidos: 'Mateo Test',
+        password: '{noop}usuario2',
+        enabled: 1,
+        fecha_Registro: new Date('2024-03-05'),
+        rol: 'CLIENTE'
     }
 ];

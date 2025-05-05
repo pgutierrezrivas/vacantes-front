@@ -1,0 +1,32 @@
+.table {
+    font-size: 14px;
+  }
+  
+  .table td, .table th {
+    vertical-align: middle;
+  }
+  
+  .btn-group .btn {
+    font-size: 0.8rem;
+  }
+  
+  .badge {
+    font-size: 85%;
+  }
+  
+  .form-select, .form-control {
+    font-size: 14px;
+  }
+  
+  .alert-info {
+    font-size: 14px;
+  }
+  
+  .modal-body {
+    font-size: 15px;
+  }
+  
+  .card-text {
+    font-size: 15px;
+    line-height: 1.5;
+  }

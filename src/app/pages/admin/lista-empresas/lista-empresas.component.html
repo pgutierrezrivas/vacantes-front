@@ -1,1 +1,108 @@
-<p>lista-empresas works!</p>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header bg-white py-3">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h5 class="card-title mb-0 fw-bold">Gestión de Empresas</h5>
+                        </div>
+                        <div class="col-auto">
+                            <a [routerLink]="['/admin/empresa/nueva']" class="btn btn-success">
+                                <i class="bi bi-plus-circle me-2"></i>Nueva Empresa
+                            </a>
+                            
+                            <button type="button" class="btn btn-link text-dark ms-2" 
+                                    data-bs-toggle="modal" data-bs-target="#infoEmpresasModal">
+                                <i class="bi bi-question-circle" style="font-size: 1.6rem;">?</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                                <input type="text" class="form-control" placeholder="Buscar por nombre o CIF..." 
+                                            (input)="aplicarFiltro($event)">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">CIF</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">País</th>
+                                    <th scope="col">Dirección fiscal</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (empresa of empresasFiltradas; track empresa.id_empresa) {
+                                    <tr>
+                                        <td>{{ empresa.id_empresa }}</td>
+                                        <td>{{ empresa.nombre_empresa }}</td>
+                                        <td>{{ empresa.cif }}</td>
+                                        <td>{{ empresa.email }}</td>
+                                        <td>{{ empresa.pais }}</td>
+                                        <td>{{ empresa.direccion_fiscal }}</td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a [routerLink]="['/admin/empresa/editar', empresa.id_empresa]" 
+                                                    class="btn btn-sm btn-primary me-1">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a>
+                                                <button class="btn btn-sm btn-danger" 
+                                                        (click)="deshabilitarEmpresa(empresa.id_empresa)">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                                @empty {
+                                    <tr>
+                                        <td colspan="7" class="text-center py-3">
+                                            <p class="mb-0 text-muted">No hay empresas disponibles</p>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para información de empresas -->
+<div class="modal fade" id="infoEmpresasModal" tabindex="-1" aria-labelledby="infoEmpresasModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="infoEmpresasModalLabel">Información de Empresas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="card-text">Las empresas registradas pueden publicar ofertas de empleo y gestionar sus procesos de selección a través de la plataforma.</p>
+                <p class="card-text">Desde este panel puedes gestionar todas las empresas registradas, crear nuevas o modificar las existentes.</p>
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Al deshabilitar una empresa, también se deshabilitará el usuario asociado y sus ofertas dejarán de ser visibles.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

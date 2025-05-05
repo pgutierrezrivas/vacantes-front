@@ -1,0 +1,55 @@
+.card {
+    border: none;
+    transition: all 0.3s;
+}
+
+.card:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0,0,0,0.125);
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+.table th {
+    font-weight: 600;
+    color: #495057;
+}
+
+.badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+    border-radius: 0.25rem;
+}
+
+.input-group-text {
+    background-color: #f8f9fa;
+}
+
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+}
+
+
+.bi {
+    font-size: 0.9rem;
+    vertical-align: middle;
+}
