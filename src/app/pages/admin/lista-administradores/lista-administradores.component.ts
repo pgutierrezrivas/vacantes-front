@@ -36,8 +36,10 @@ export class ListaAdministradoresComponent {
   }
 
   cargarAdministradores(): void {
-    this.administradores = this.uService.getUsuariosByRol('ADMON');
-    this.administradoresFiltrados = [...this.administradores];
+    this.uService.getUsuariosByRol('ADMON').subscribe(usuarios => {
+      this.administradores = usuarios;
+      this.administradoresFiltrados = [...this.administradores];
+    });
   }
 
   aplicarFiltro(event: Event): void {
