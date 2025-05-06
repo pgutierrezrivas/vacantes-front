@@ -3,21 +3,17 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map, catchError, of } from 'rxjs';
 import { Usuario } from '../interfaces/usuario';
 import { environment } from '../enviroments/environment.development';
-import { USUARIOS_DB } from '../db/usuarios.db';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuariosService {
 
-  private arrUsuarios : Usuario[]; //dato mockeado eliminar
-
-  private apiUrl = `${environment.apiUrl}/users`;
+  private apiUrl = `${environment.apiUrl}/usuarios`;
   private http: HttpClient = inject(HttpClient);
 
-  constructor() { 
-    this.arrUsuarios = USUARIOS_DB; //dato mockeado eliminar
-  }
+  constructor() {}
 
   getAllUsuarios(): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(this.apiUrl).pipe(
@@ -44,51 +40,74 @@ export class UsuariosService {
         enabled: user.enabled ? 1 : 0, // (1 true, 0 false)
       })),
       catchError((error) => {
-        console.error(`Error fetching usuario with ID ${id}:`, error);
+        console.error(`Error fetching usuario con ID ${id}:`, error);
         return of(undefined);
       })
     );
   }
 
-  getUsuariosByRol(rol: String): Usuario[] {
-    return this.arrUsuarios.filter(usuario => usuario.rol === rol);
+  getUsuariosByRol(rol: String): Observable<Usuario[]> {
+    return this.getAllUsuarios().pipe(
+      map(usuarios => usuarios.filter(usuario => usuario.rol === rol))
+    )
   }
   
-  getUsuarioByEmail(email: string): Usuario | undefined {
-    return this.arrUsuarios.find(usuario => usuario.email === email);
+  // Metodo para obtener usuario por email (GET /usuarios/uno/{email}
+  getUsuarioByEmail(email: string): Observable<Usuario | undefined> {
+    return this.http.get<Usuario>(`${this.apiUrl}/uno/${email}`).pipe(
+      map(user => ({
+        ...user,
+        fecha_Registro: new Date(user.fecha_Registro),
+        enabled: user.enabled ? 1 : 0, 
+      })),
+      catchError((error) => {
+        console.error(`Error fetching usuario con email ${email}: `, error);
+        return of (undefined);
+      })
+    );
   }
 
-  crearUsuario(usuario: Usuario): Usuario | undefined {
-    //verificar si el usuario ya existe
-    if (!this.getUsuarioByEmail(usuario.email)) {
-      this.arrUsuarios.push(usuario);
-      this.persistirUsuarios();
-      return usuario;
-    }
-    return undefined;
+  // Metodo para crear un nuevo usuario (POST /usuarios/alta)
+  crearUsuario(usuario: Usuario): Observable<Usuario | undefined> {
+    return this.http.post<Usuario>(`${this.apiUrl}/alta`, usuario).pipe(
+      map(user => ({
+        ...user,
+        fecha_Registro: new Date(user.fecha_Registro),
+        enabled: user.enabled ? 1 : 0
+      })),
+      catchError((error) => {
+        console.error('Error creando el usuario', error)
+        return of (undefined)
+      })
+    )
+  }
+
+  // metodo para actualizar un usuario (PUT /usuarios/modificar)
+  actualizarUsuario(usuario: Usuario): Observable<Usuario | undefined> {
+    return this.http.put<Usuario>(`${this.apiUrl}/modificar`, usuario).pipe(
+      map(user => ({
+        ...user,
+        fecha_Registro: new Date(user.fecha_Registro),
+        enabled: user.enabled ? 1 : 0
+      })),
+      catchError((error) => {
+        console.error('Error actualizando usuario:', error);
+        return of(undefined);
+      })
+    );
+  }
+  // metodo para deshabilitar/eliminar un usuario (DELETE /usuarios/eliminar/{email})
+  deshabilitarUsuario(email: string):Observable<boolean> {
+    return this.http.delete<number>(`${this.apiUrl}/eliminar/${email}`).pipe(
+      map(result => result > 0),
+      catchError((error) => {
+        console.error(`Error deshabilitando usuario con email ${email}:`, error);
+        return of(false);
+      })
+    );
   }
   
-  actualizarUsuario(usuario: Usuario): Usuario | undefined {
-    const index = this.arrUsuarios.findIndex(u => u.email === usuario.email);
-    if (index !== -1) {
-      this.arrUsuarios[index] = usuario;
-      this.persistirUsuarios();
-      return usuario;
-    }
-    return undefined;
-  }
-  
-  deshabilitarUsuario(email: string): boolean {
-    const index = this.arrUsuarios.findIndex(u => u.email === email);
-    if (index !== -1) {
-      this.arrUsuarios[index].enabled = 0;
-      this.persistirUsuarios();
-      return true;
-    }
-    return false;
-  }
-  
-  private persistirUsuarios(): void {
-    localStorage.setItem('usuarios', JSON.stringify(this.arrUsuarios));
-  }
+  // private persistirUsuarios(): void {
+  //   localStorage.setItem('usuarios', JSON.stringify(this.arrUsuarios));
+  // }
 }
