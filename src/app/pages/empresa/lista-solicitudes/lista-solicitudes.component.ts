@@ -51,7 +51,7 @@ candidatos: Usuario[] = [];
     //cargar datos de usuarios para mostrar informacion de el/los canditato/s
     this.candidatos = [];
     this.solicitudes.forEach(solicitud => {
-      const usuario = this.uService.getUserByEmail(solicitud.email);
+      const usuario = this.uService.getUsuarioByEmail(solicitud.email);
       if (usuario) {
         this.candidatos.push(usuario);
       }
@@ -85,7 +85,7 @@ candidatos: Usuario[] = [];
   
     // Método público para obtener el nombre completo desde la plantilla
     obtenerNombreCompleto(email: string): string {
-      const usuario = this.uService.getUserByEmail(email);
+      const usuario = this.uService.getUsuarioByEmail(email);
       if (usuario) {
         return `${usuario.nombre} ${usuario.apellidos}`;
       }

@@ -54,13 +54,13 @@ export class UsuariosService {
     return this.arrUsuarios.filter(usuario => usuario.rol === rol);
   }
   
-  getUserioByEmail(email: string): Usuario | undefined {
+  getUsuarioByEmail(email: string): Usuario | undefined {
     return this.arrUsuarios.find(usuario => usuario.email === email);
   }
 
   crearUsuario(usuario: Usuario): Usuario | undefined {
     //verificar si el usuario ya existe
-    if (!this.getUserioByEmail(usuario.email)) {
+    if (!this.getUsuarioByEmail(usuario.email)) {
       this.arrUsuarios.push(usuario);
       this.persistirUsuarios();
       return usuario;

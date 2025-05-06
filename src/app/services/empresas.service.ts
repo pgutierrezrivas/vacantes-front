@@ -12,10 +12,6 @@ export class EmpresasService {
 
   private apiUrl = `${environment.apiUrl}/empresas`;
   private http: HttpClient = inject(HttpClient);
-  
-  getEmpresaPorUsuario(email: string): Observable<Empresa> {
-    return this.http.get<Empresa>(`${this.apiUrl}/uno/${email}`);
-  }
 
   private arrEmpresas : Empresa[];
 
@@ -27,7 +23,9 @@ export class EmpresasService {
     return this.arrEmpresas;
   }
 
-
+  getEmpresaPorUsuario(email: string): Observable<Empresa> {
+    return this.http.get<Empresa>(`${this.apiUrl}/email/${email}`);
+  }
 
   getEmpresaById(id: number): Observable<Empresa>{
     const empresa = this.arrEmpresas.find(e => e.id_empresa === id);

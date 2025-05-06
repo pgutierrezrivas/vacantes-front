@@ -76,7 +76,7 @@ export class AuthService {
     }).pipe(
       switchMap(resp => {
         if (!!resp && !!resp.body) {
-          return this.getUsuarioPorEmail(email);
+          return this.fetchUsuarioCompleto(email);
         } else {
           return of(null);
         }
@@ -90,7 +90,7 @@ export class AuthService {
   }
 
   // metodo para obtener los datos completos de un usuario (lo usamos en el login)
-  getUsuarioPorEmail(email: string): Observable<Usuario> {
+  private fetchUsuarioCompleto(email: string): Observable<Usuario> {
     return this.http.get<Usuario>(`${environment.apiUrl}/usuarios/uno/${email}`).pipe(
       tap(usuarioCompleto => {
         this._usuario.next(usuarioCompleto);
