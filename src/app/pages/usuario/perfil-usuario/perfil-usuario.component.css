@@ -7,11 +7,8 @@
     border-top-right-radius: 15px;
 }
 
-.bi-person-circle {
-    font-size: 100px;
-    color: #6c757d;
-}
-
-.container {
-    margin-top: -3rem;
+.card-image {
+    position: relative;
+    margin-top: -65px;
+    margin-bottom: -28px;
 }
