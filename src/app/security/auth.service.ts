@@ -110,6 +110,10 @@ export class AuthService {
     return this.usuario$.pipe(map(user => user?.rol || null));
   }
 
+  getUsuario(): Observable<Usuario | null> {
+    return this.usuario$;
+  }
+
   isAuthenticated(): Observable<boolean> {
     return this.usuario$.pipe(map(user => !!user?.enabled));
   }
