@@ -10,14 +10,13 @@ import { USUARIOS_DB } from '../db/usuarios.db';
 })
 export class UsuariosService {
 
-  private arrUsuarios : Usuario[];
+  private arrUsuarios : Usuario[]; //dato mockeado eliminar
 
   private apiUrl = `${environment.apiUrl}/users`;
-
   private http: HttpClient = inject(HttpClient);
 
   constructor() { 
-    this.arrUsuarios = USUARIOS_DB;
+    this.arrUsuarios = USUARIOS_DB; //dato mockeado eliminar
   }
 
   getAllUsuarios(): Observable<Usuario[]> {
@@ -55,13 +54,13 @@ export class UsuariosService {
     return this.arrUsuarios.filter(usuario => usuario.rol === rol);
   }
   
-  getUserByEmail(email: string): Usuario | undefined {
+  getUserioByEmail(email: string): Usuario | undefined {
     return this.arrUsuarios.find(usuario => usuario.email === email);
   }
 
   crearUsuario(usuario: Usuario): Usuario | undefined {
     //verificar si el usuario ya existe
-    if (!this.getUserByEmail(usuario.email)) {
+    if (!this.getUserioByEmail(usuario.email)) {
       this.arrUsuarios.push(usuario);
       this.persistirUsuarios();
       return usuario;

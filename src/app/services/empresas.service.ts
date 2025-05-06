@@ -1,13 +1,21 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Empresa } from '../interfaces/empresa';
 import { EMPRESAS_DB } from '../db/empresas.db';
 import { Observable, of, throwError } from 'rxjs';
+import { environment } from '../enviroments/environment.development';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmpresasService {
 
+  private apiUrl = `${environment.apiUrl}/empresas`;
+  private http: HttpClient = inject(HttpClient);
+  
+  getEmpresaPorUsuario(email: string): Observable<Empresa> {
+    return this.http.get<Empresa>(`${this.apiUrl}/uno/${email}`);
+  }
 
   private arrEmpresas : Empresa[];
 
@@ -18,6 +26,7 @@ export class EmpresasService {
   getAllEmpresas() : Empresa[] {
     return this.arrEmpresas;
   }
+
 
 
   getEmpresaById(id: number): Observable<Empresa>{

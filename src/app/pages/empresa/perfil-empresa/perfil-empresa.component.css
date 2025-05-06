@@ -1,0 +1,14 @@
+.card {
+    border-radius: 15px;
+}
+
+.card-header {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.card-image {
+    position: relative;
+    margin-top: -65px;
+    margin-bottom: -28px;
+}

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from '../../../interfaces/usuario';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Observable, Subscription } from 'rxjs';
+import { AuthService } from '../../../security/auth.service';
+import { EmpresasService } from '../../../services/empresas.service';
 import { Empresa } from '../../../interfaces/empresa';
 
 @Component({
@@ -11,23 +13,33 @@ import { Empresa } from '../../../interfaces/empresa';
   styleUrl: './perfil-empresa.component.css'
 })
 export class PerfilEmpresaComponent implements OnInit {
-usuario?: Usuario;
-empresa?: Empresa;
 
-constructor (private router : Router) {}
+  usuario$!: Observable<Usuario | null>;
+  empresa?: Empresa;
+  private subscription: Subscription | undefined;
 
-ngOnInit(): void {
-//Cargar datos del user desde localStorage
-const usuarioGuardado = localStorage.getItem('usuario');
-if (usuarioGuardado) {
-  this.usuario = JSON.parse(usuarioGuardado);
-}
-}
+  constructor(private authService: AuthService, private eService: EmpresasService) {}
 
-editarPerfil(): void {
-  alert('Pendiente')
-  console.log('Editar perfil TO-DO');
-}
+  ngOnInit(): void {
+    this.usuario$ = this.authService.getUsuario();
+  
+    this.subscription = this.usuario$.subscribe(usuario => {
+      if (usuario?.email) {
+        this.eService.getEmpresaPorUsuario(usuario.email).subscribe(empresa => {
+          this.empresa = empresa;
+        });
+      }
+    });
+  }
 
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe(); // Desuscribirse para evitar fugas de memoria
+    }
+  }
+
+  editarPerfil() {
+    throw new Error('Method not implemented.');
+  }
 
 }

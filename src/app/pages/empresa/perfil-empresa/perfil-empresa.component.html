@@ -1,34 +1,31 @@
 <div class="container">
+    <div class="row text-center">
+        <div class="col-12 mb-5">
+            <h2 class="fw-semibold title-green">Mi perfil</h2>
+            <p class="text-muted">Consulta y gestiona fácilmente tus datos personales y de empresa asociada</p>
+        </div>
+    </div>
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-header bg-warning text-center">
-                    <h3 class="pt-2">Mi Perfil</h3>
+        <div class="col-lg-6 mb-3 mx-auto">
+            <div class="card shadow-sm h-100">
+                <div class="card-image text-center">
+                    <img src="images/perfil.svg" alt="logo-text" class="w-100" style="max-width: 280px;">
                 </div>
-                <div class="card-body px-5">
-                    <div class="text-center mb-4">
-                        <i class="bi bi-person-circle fs-1 text-secondary"></i>
+                <div class="card-body ps-5">
+                    <div class="row mb-3">
+                        <div class="col-6 fw-semibold ps-5">Nombre completo</div>
+                        <div class="col-6">{{ (usuario$ | async)?.nombre }} {{ (usuario$ | async)?.apellidos }}</div>
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col-6 fw-semibold">Nombre</div>
-                        <div class="col-6">{{ usuario?.nombre }} {{ usuario?.apellidos }}</div>
+                        <div class="col-6 fw-semibold ps-5">Correo electrónico</div>
+                        <div class="col-6">{{ (usuario$ | async)?.email }}</div>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col-6 fw-semibold">Correo Electrónico</div>
-                        <div class="col-6">{{ usuario?.email }}</div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-6 fw-semibold">Fecha de Registro</div>
-                        <div class="col-6">{{ usuario?.fecha_Registro | date:'mediumDate' }}</div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-6 fw-semibold">Rol</div>
+                    <div class="row mb-2">
+                        <div class="col-6 fw-semibold ps-5">Rol</div>
                         <div class="col-6">
-                            @switch(usuario?.rol) {
+                            @switch((usuario$ | async)?.rol) {
                             @case('CLIENTE') { Usuario }
                             @case('EMPRESA') { Empresa }
                             @case('ADMON') { Administrador }
@@ -36,9 +33,29 @@
                             }
                         </div>
                     </div>
+
+                    <div class="row mb-3">
+                        <div class="col-6 fw-semibold ps-5">Nombre empresa</div>
+                        <div class="col-6">{{ empresa?.nombre_empresa }}</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-6 fw-semibold ps-5">Cif empresa</div>
+                        <div class="col-6">{{ empresa?.cif }}</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-6 fw-semibold ps-5">Dirección fiscal</div>
+                        <div class="col-6">{{ empresa?.direccion_fiscal }}</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-6 fw-semibold ps-5">País</div>
+                        <div class="col-6">{{ empresa?.pais }}</div>
+                    </div>
                 </div>
-                <div class="card-footer text-center">
-                    <button class="btn btn-warning" (click)="editarPerfil()">Editar Perfil</button>
+                <div class="card-footer text-center bg-white border-0 mb-3">
+                    <button type="button" class="btn btn-warning" (click)="editarPerfil()">Editar Perfil</button>
                 </div>
             </div>
         </div>
