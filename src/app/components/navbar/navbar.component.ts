@@ -17,7 +17,9 @@ export class NavbarComponent {
   }
 
   getRol(): string | null {
-    return this.authService.getRol();
+    let role: string | null = null;
+    this.authService.getRol().subscribe(value => role = value);
+    return role;
   }
 
 }

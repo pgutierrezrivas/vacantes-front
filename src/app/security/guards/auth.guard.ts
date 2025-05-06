@@ -1,30 +1,34 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import { CanActivateFn, Router, UrlTree } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { map, take, Observable, switchMap, of } from 'rxjs';
 
 // para evitar que usuarios autenticados accedan a las rutas publicas (como login o registro)
-export const authGuard: CanActivateFn = () => {
+export const authGuard: CanActivateFn = (): Observable<boolean | UrlTree> => {
 
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  // si el usuario esta autenticado, lo redirigimos a su dashboard correspondiente y bloqueamos el acceso a la ruta
-  if (authService.isAuthenticated()) {
-
-    const rol = authService.getRol();
-
-    switch (rol) {
-      case 'ADMON':
-        router.navigate(['/admin/dashboard']);
-        return false;
-      case 'EMPRESA':
-        router.navigate(['/empresa/dashboard']);
-        return false;
-      case 'CLIENTE':
-        router.navigate(['/usuario/dashboard']);
-        return false;
-    }
-  }
-  // si no esta autenticado, permitimos el acceso a la ruta
-  return true;
+  return authService.isAuthenticated().pipe(
+    take(1),
+    switchMap((isAuthenticated) => {
+      if (isAuthenticated) {
+        return authService.getRol().pipe(
+          take(1),
+          map((rol) => {
+            if (rol === 'ADMON') {
+              return router.parseUrl('/admin/dashboard');
+            } else if (rol === 'EMPRESA') {
+              return router.parseUrl('/empresa/dashboard');
+            } else if (rol === 'CLIENTE') {
+              return router.parseUrl('/usuario/dashboard');
+            }
+            return true; // si el rol no coincide, permitimos el acceso
+          })
+        );
+      }
+      // si no esta autenticado, permitimos el acceso a la ruta
+      return of(true);
+    })
+  );
 };

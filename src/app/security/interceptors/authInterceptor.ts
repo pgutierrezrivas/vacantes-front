@@ -2,7 +2,7 @@ import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthService } from '../auth.service';
 
-/*export const authInterceptor: HttpInterceptorFn = (req, next) => {
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const authHeader = authService.getBasicAuthHeader();
 
@@ -16,4 +16,4 @@ import { AuthService } from '../auth.service';
   }
 
   return next(req);
-};*/
+};

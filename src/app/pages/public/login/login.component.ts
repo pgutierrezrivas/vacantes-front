@@ -19,15 +19,8 @@ export class LoginComponent {
   error: string | null = null;
 
   login(): void {
-
-    const isAuthenticated = this.authService.login(this.email, this.password);
-
-    if (isAuthenticated) {
-
-      const rol = this.authService.getRol(); // obtenemos el rol despues de autenticarse
-
-      // y redirigimos a su dashboard correspondiente segun rol
-      switch (rol) {
+    this.authService.login(this.email, this.password).subscribe(response => {
+      switch (response.rol) {
         case 'ADMON':
           this.router.navigate(['/admin/dashboard']);
           break;
@@ -38,11 +31,9 @@ export class LoginComponent {
           this.router.navigate(['/usuario/dashboard']);
           break;
         default:
-          this.router.navigate(['/login']); // si el rol no es valido, redirigimos a login
+          this.router.navigate(['/login']);
           break;
       }
-    } else {
-      this.error = 'Correo o contraseña incorrectos';
-    }
+    });
   }
 }

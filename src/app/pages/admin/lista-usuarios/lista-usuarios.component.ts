@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 })
 export class ListaUsuariosComponent {
 
-
+/*
   usuarios: Usuario[] = [];
   usuariosFiltrados: Usuario[] =[];
   usuarioSeleccionado: Usuario | null = null;
@@ -103,5 +103,5 @@ activarUsuario(email: string): void {
   }
 }
 
-
+*/
 }

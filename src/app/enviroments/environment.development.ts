@@ -1,6 +1,6 @@
 export const environment = {
     production: false,
-    apiUrl: 'https://localhost:8081',
-    apiUrlPublic: 'https://reto.martaclj.com',
+    apiUrl: 'http://localhost:5001',
+    //apiUrlPublic: 'https://reto.josbotdev.es',
     apiKey: '',
-};
+  };

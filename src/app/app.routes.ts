@@ -24,6 +24,7 @@ import { roleGuard } from './security/guards/role.guard';
 import { authGuard } from "./security/guards/auth.guard";
 import { PerfilUsuarioComponent } from "./pages/usuario/perfil-usuario/perfil-usuario.component";
 import { PostularFormComponent } from "./components/postular-form/postular-form.component";
+import { UnauthorizedComponent } from "./pages/unauthorized/unauthorized.component";
 
 
 export const routes: Routes = [
@@ -58,6 +59,9 @@ export const routes: Routes = [
     { path: 'usuario/solicitudes/:id', component: MisSolicitudesComponent, canActivate: [roleGuard], data: { expectedRole: 'CLIENTE' } },
     { path: 'usuario/perfil', component: PerfilUsuarioComponent, canActivate: [roleGuard], data: { expectedRole: 'CLIENTE' } },
   
+    // ruta para usuario no autorizado
+    { path: 'unauthorized', component: UnauthorizedComponent },
+
     // rutas por defecto
     { path: '', pathMatch:'full', redirectTo: 'home'},
     { path: '**', component: Page404Component } 

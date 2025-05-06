@@ -1,5 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map, catchError, of } from 'rxjs';
 import { Usuario } from '../interfaces/usuario';
+import { environment } from '../enviroments/environment.development';
 import { USUARIOS_DB } from '../db/usuarios.db';
 
 @Injectable({
@@ -9,18 +12,49 @@ export class UsuariosService {
 
   private arrUsuarios : Usuario[];
 
+  private apiUrl = `${environment.apiUrl}/users`;
+
+  private http: HttpClient = inject(HttpClient);
+
   constructor() { 
     this.arrUsuarios = USUARIOS_DB;
   }
 
-  getAllUsuarios() : Usuario[] {
-    return this.arrUsuarios;
+  getAllUsuarios(): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(this.apiUrl).pipe(
+      map(users => {
+        return users.map(user => ({
+          ...user,
+          fecha_Registro: new Date(user.fecha_Registro),
+          enabled: user.enabled ? 1 : 0, // (1 true, 0 false)
+        }));
+      }),
+      catchError((error) => {
+        console.error('Error fetching usuarios:', error);
+        return of([]); // devuelve un array vacio en caso de error para que la aplicación no se rompa
+      })
+    );
+  }
+
+  // metodo para obtener usuario por ID
+  getUsuarioById(id: string): Observable<Usuario | undefined> {
+    return this.http.get<Usuario>(`${this.apiUrl}/${id}`).pipe(
+      map(user => ({
+        ...user,
+        fecha_Registro: new Date(user.fecha_Registro),
+        enabled: user.enabled ? 1 : 0, // (1 true, 0 false)
+      })),
+      catchError((error) => {
+        console.error(`Error fetching usuario with ID ${id}:`, error);
+        return of(undefined);
+      })
+    );
   }
 
   getUsuariosByRol(rol: String): Usuario[] {
     return this.arrUsuarios.filter(usuario => usuario.rol === rol);
   }
-
+  
   getUserByEmail(email: string): Usuario | undefined {
     return this.arrUsuarios.find(usuario => usuario.email === email);
   }
@@ -58,5 +92,4 @@ export class UsuariosService {
   private persistirUsuarios(): void {
     localStorage.setItem('usuarios', JSON.stringify(this.arrUsuarios));
   }
-
 }
