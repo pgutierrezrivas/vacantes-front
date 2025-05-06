@@ -1,99 +1,110 @@
-<div class="container mt-5">
-  <div class="card shadow">
-    <div class="card-header bg-warning d-flex justify-content-between align-items-center">
-      <h2>Solicitudes recibidas</h2>
+<div class="container">
+  <div class="row mb-4 text-center">
+    <div class="col-12">
+      <h2 class="fw-semibold title-green">Solicitudes recibidas</h2>
+      <p class="text-muted">Administra las solicitudes de los candidatos interesados en tus vacantes</p>
+    </div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
       @if (vacante) {
-        <a [routerLink]="['/empresa/vacantes']" class="btn btn-light">Volver a mis vacantes</a>
+      <a [routerLink]="['/empresa/vacantes']" class="btn btn-light">Volver a mis vacantes</a>
       }
     </div>
-    
+
     <div class="card-body">
       <!-- Detalles de la vacante -->
       @if (vacante) {
-        <div class="mb-4 p-3 border-bottom">
-          <h3 class="title-green">{{ vacante.nombre }}</h3>
-          <p><strong>Descripción:</strong> {{ vacante.descripcion }}</p>
-          <p><strong>Fecha publicación:</strong> {{ vacante.fecha | date:'dd/MM/yyyy' }}</p>
-          <p><strong>Estado:</strong> 
-            <span [ngClass]="{
+      <div class="mb-4 p-3 border-bottom">
+        <h3 class="title-green">{{ vacante.nombre }}</h3>
+        <p><strong>Descripción:</strong> {{ vacante.descripcion }}</p>
+        <p><strong>Fecha publicación:</strong> {{ vacante.fecha | date:'dd/MM/yyyy' }}</p>
+        <p><strong>Estado:</strong>
+          <span [ngClass]="{
               'badge bg-success': vacante.estatus === 'CREADA',
               'badge bg-primary': vacante.estatus === 'CUBIERTA',
               'badge bg-danger': vacante.estatus === 'CANCELADA'
             }">{{ vacante.estatus }}</span>
-          </p>
-        </div>
+        </p>
+      </div>
       }
-      
+
       @if (solicitudes.length === 0) {
-        <div class="alert alert-secondary text-center">
-          <p>No hay solicitudes recibidas para esta vacante.</p>
-        </div>
+      <div class="text-center py-5">
+        <img src="images/empty.svg" alt="No hay solicitudes" class="mb-3" style="max-width: 120px;">
+        <h4>No hay solicitudes disponibles</h4>
+        <p class="text-muted">
+          Aún no has realizado ninguna solicitud
+        </p>
+        <button class="btn btn-warning mt-3" [routerLink]="['/empresa/vacante/nueva']">
+          <i class="bi bi-plus-circle me-1"></i> Ver mis vacantes
+        </button>
+      </div>
       }
-      
+
       <!-- Lista de solicitudes -->
       @if (solicitudes.length > 0) {
-        <div class="table-responsive">
-          <table class="table table-hover">
-            <thead class="table-light">
-              <tr>
-                <th>Candidato</th>
-                <th>Fecha solicitud</th>
-                <th>Comentarios</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (solicitud of solicitudes; track solicitud.id_solicitud) {
-                <tr>
-                  <td>
-                    <div class="d-flex align-items-center">
-                      <div class="ms-2">
-                        <p class="small text-muted mb-0">{{ solicitud.email }}</p>
-                        @if (solicitud.curriculum) {
-                          <a href="{{ solicitud.curriculum }}" target="_blank" class="small">Ver perfil profesional</a>
-                        }
-                      </div>
-                    </div>
-                  </td>
-                  <td>{{ solicitud.fecha | date:'dd/MM/yyyy' }}</td>
-                  <td>{{ solicitud.comentarios || 'Sin comentarios' }}</td>
-                  <td>
-                    <span [ngClass]="{
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>Candidato</th>
+              <th>Fecha solicitud</th>
+              <th>Comentarios</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (solicitud of solicitudes; track solicitud.id_solicitud) {
+            <tr>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="ms-2">
+                    <p class="small text-muted mb-0">{{ solicitud.email }}</p>
+                    @if (solicitud.curriculum) {
+                    <a href="{{ solicitud.curriculum }}" target="_blank" class="small">Ver perfil profesional</a>
+                    }
+                  </div>
+                </div>
+              </td>
+              <td>{{ solicitud.fecha | date:'dd/MM/yyyy' }}</td>
+              <td>{{ solicitud.comentarios || 'Sin comentarios' }}</td>
+              <td>
+                <span [ngClass]="{
                       'badge bg-warning': solicitud.estado === 0,
                       'badge bg-success': solicitud.estado === 1
                     }">
-                      {{ solicitud.estado === 0 ? 'Presentada' : 'Adjudicada' }}
-                    </span>
-                  </td>
-                  <td>
-                    <div class="btn-group" role="group">
-                      <button class="btn btn-sm btn-outline-primary" (click)="descargarCurriculum(solicitud.archivo)">
-                        <i class="bi bi-download">CV</i> 
-                      </button>
-                      
-                      <!-- Botón para adjudicar la vacante si no está adjudicada -->
-                      @if (vacante?.estatus === 'CREADA' && solicitud.estado === 0) {
-                        <button class="btn btn-sm btn-success ms-1" 
-                                (click)="actualizarEstadoSolicitud(solicitud, 1)">
-                          <i class="bi bi-check-circle"> Adjudicar</i>
-                        </button>
-                      }
-                      
-                      <!-- Si ya está adjudicada a este candidato -->
-                      @if (solicitud.estado === 1) {
-                        <button class="btn btn-sm btn-outline-success ms-1" 
-                                disabled>
-                          <i class="bi bi-check-circle-fill">Adjudicada</i> 
-                        </button>
-                      }
-                    </div>
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
+                  {{ solicitud.estado === 0 ? 'Presentada' : 'Adjudicada' }}
+                </span>
+              </td>
+              <td>
+                <div class="btn-group" role="group">
+                  <button class="btn btn-sm btn-outline-primary" (click)="descargarCurriculum(solicitud.archivo)">
+                    <i class="bi bi-download">CV</i>
+                  </button>
+
+                  <!-- Botón para adjudicar la vacante si no está adjudicada -->
+                  @if (vacante?.estatus === 'CREADA' && solicitud.estado === 0) {
+                  <button class="btn btn-sm btn-success ms-1" (click)="actualizarEstadoSolicitud(solicitud, 1)">
+                    <i class="bi bi-check-circle"> Adjudicar</i>
+                  </button>
+                  }
+
+                  <!-- Si ya está adjudicada a este candidato -->
+                  @if (solicitud.estado === 1) {
+                  <button class="btn btn-sm btn-outline-success ms-1" disabled>
+                    <i class="bi bi-check-circle-fill">Adjudicada</i>
+                  </button>
+                  }
+                </div>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
       }
     </div>
   </div>

@@ -20,19 +20,6 @@ export class PerfilEmpresaComponent implements OnInit {
 
   constructor(private authService: AuthService, private eService: EmpresasService) { }
 
-  /*ngOnInit(): void {
-    this.usuario$ = this.authService.getUsuario();
-
-    this.subscription = this.usuario$.subscribe(usuario => {
-      if (usuario?.email) {
-        this.eService.getEmpresaPorUsuario(usuario.email).subscribe(empresa => {
-          console.log('Empresa recibida:', empresa);
-          this.empresa = empresa;
-        });
-      }
-    });
-  }*/
-
   ngOnInit(): void {
     this.usuario$ = this.authService.getUsuario();
 

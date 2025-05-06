@@ -20,19 +20,24 @@ export class LoginComponent {
 
   login(): void {
     this.authService.login(this.email, this.password).subscribe(response => {
-      switch (response.rol) {
-        case 'ADMON':
-          this.router.navigate(['/admin/dashboard']);
-          break;
-        case 'EMPRESA':
-          this.router.navigate(['/empresa/dashboard']);
-          break;
-        case 'CLIENTE':
-          this.router.navigate(['/usuario/dashboard']);
-          break;
-        default:
-          this.router.navigate(['/login']);
-          break;
+
+      if (!!response) {
+        switch (response.rol) {
+          case 'ADMON':
+            this.router.navigate(['/admin/dashboard']);
+            break;
+          case 'EMPRESA':
+            this.router.navigate(['/empresa/dashboard']);
+            break;
+          case 'CLIENTE':
+            this.router.navigate(['/usuario/dashboard']);
+            break;
+          default:
+            this.router.navigate(['/login']);
+            break;
+        }
+      } else {
+        this.error = 'Correo o contraseña incorrectos';
       }
     });
   }

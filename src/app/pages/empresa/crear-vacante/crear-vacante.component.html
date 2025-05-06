@@ -1,18 +1,17 @@
     <div class="container py-4">
-        <div class="row mb-4">
+        <div class="row mb-4 text-center">
             <div class="col-12">
-                <h2 class="title-green">Publicar Nueva Vacante</h2>
+                <h2 class="fw-semibold title-green">Publicar Nueva Vacante</h2>
             <p class="text-muted">Rellena el formulario para crear una nueva oferta de empleo</p>
         </div>
     </div>
-
         <div class="card shadow-sm">
             <div class="card-body">
                 <form [formGroup]="vacanteForm" (ngSubmit)="onSubmit()">
                     <div class="row g-3">
             <!-- Nombre de la vacante -->
             <div class="col-12 mb-3">
-              <label for="nombre" class="form-label">Título de la vacante *</label>
+              <label for="nombre" class="form-label">Título de la vacante <span class="text-danger">*</span></label>
             <input type="text" class="form-control" id="nombre" formControlName="nombre" placeholder="Ej: Desarrollador Full Stack Angular/Spring Boot">
                 @if (submitted && vacanteForm.get('nombre')?.errors) {
                     <small class="text-danger">
@@ -25,7 +24,7 @@
 
             <!-- Categoría -->
             <div class="col-md-6 mb-3">
-              <label for="categoria" class="form-label">Categoría *</label>
+              <label for="categoria" class="form-label">Categoría <span class="text-danger">*</span></label>
                 <select class="form-select" id="categoria" formControlName="id_Categoria">
                     <option value="" disabled selected>Seleccione una categoría</option>
             @for (categoria of categorias; track categoria.id_categoria) {
@@ -43,7 +42,7 @@
 
             <!-- Salario -->
             <div class="col-md-6 mb-3">
-              <label for="salario" class="form-label">Salario anual (€) *</label>
+              <label for="salario" class="form-label">Salario anual (€) <span class="text-danger">*</span></label>
             <input type="number" class="form-control" id="salario" formControlName="salario" placeholder="Ej: 35000">
                 @if (submitted && vacanteForm.get('salario')?.errors) {
                     <small class="text-danger">
@@ -58,7 +57,7 @@
 
             <!-- Descripción breve -->
             <div class="col-12 mb-3">
-              <label for="descripcion" class="form-label">Descripción breve *</label>
+              <label for="descripcion" class="form-label">Descripción breve <span class="text-danger">*</span></label>
                 <textarea class="form-control" id="descripcion" formControlName="descripcion" rows="3"placeholder="Breve descripción de la vacante (máx. 500 caracteres)"></textarea>
             @if (submitted && vacanteForm.get('descripcion')?.errors) {
                 <small class="text-danger">
@@ -73,7 +72,7 @@
 
             <!-- Detalles completos -->
             <div class="col-12 mb-3">
-              <label for="detalles" class="form-label">Detalles completos *</label>
+              <label for="detalles" class="form-label">Detalles completos <span class="text-danger">*</span></label>
             <textarea class="form-control" id="detalles" formControlName="detalles" rows="6"placeholder="Requisitos, responsabilidades y beneficios detallados"></textarea>
                 @if (submitted && vacanteForm.get('detalles')?.errors) {
                     <small class="text-danger">
