@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { Empresa } from '../../../interfaces/empresa';
 import { EmpresasService } from '../../../services/empresas.service';
 import { UsuariosService } from '../../../services/usuarios.service';
+import { Usuario } from '../../../interfaces/usuario';
 
 @Component({
   selector: 'app-lista-empresas',
@@ -54,16 +55,18 @@ export class ListaEmpresasComponent implements OnInit {
     if (confirm('¿Esta seguro de que desea desahabilitar una empresa? Tambien se deshabilitara el usuario asociado.')){
     const empresa = this.empresas.find(e => e.id_empresa === id);
     if (empresa) {
-      // buscar el usuario asociado y deshabilitarlo
-      const usuarios = this.usuariosService.getUsuariosByRol('EMPRESA');
-      const usuarioEmpresa = usuarios.find(u => u.email === empresa.email);
-      
-      if (usuarioEmpresa) {
-        this.usuariosService.deshabilitarUsuario(usuarioEmpresa.email);
-        alert('Empresa y usuario asociado deshabilitados correctamente');
-        //recargar la lista de empresas
-        this.cargarEmpresas();
-      }
+      // Buscar el usuario asociado y deshabilitarlo
+      this.usuariosService.getUsuariosByRol('EMPRESA').subscribe((usuarios: Usuario[]) => {
+        const usuarioEmpresa = usuarios.find((u: Usuario) => u.email === empresa.email);
+        
+        if (usuarioEmpresa) {
+          this.usuariosService.deshabilitarUsuario(usuarioEmpresa.email).subscribe(() => {
+            alert('Empresa y usuario asociado deshabilitados correctamente');
+            //recargar la lista de empresas
+            this.cargarEmpresas();
+          });
+        }
+      });
     }
   }
 }

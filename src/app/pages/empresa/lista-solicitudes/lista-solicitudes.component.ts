@@ -7,6 +7,7 @@ import { VacantesService } from '../../../services/vacantes.service';
 import { UsuariosService } from '../../../services/usuarios.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { forkJoin, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-lista-solicitudes',
@@ -50,12 +51,18 @@ candidatos: Usuario[] = [];
 
     //cargar datos de usuarios para mostrar informacion de el/los canditato/s
     this.candidatos = [];
+
+    const userObservables: Observable<Usuario | undefined>[] = [];
+
     this.solicitudes.forEach(solicitud => {
-      const usuario = this.uService.getUsuarioByEmail(solicitud.email);
-      if (usuario) {
-        this.candidatos.push(usuario);
-      }
+      userObservables.push(this.uService.getUsuarioByEmail(solicitud.email));
     });
+
+    if (userObservables.length > 0) {
+      forkJoin(userObservables).subscribe(results => {
+        this.candidatos = results.filter(user => user !== undefined) as Usuario[];
+      });
+    }
   }
 
   actualizarEstadoSolicitud(solicitud : Solicitud, estado : number): void {
@@ -82,10 +89,15 @@ candidatos: Usuario[] = [];
     console.log('Descargando archivo: ' + archivo);
     alert('Descargando curriculum: ' + archivo);
   }
+
+   // Método para buscar un usuario por email en el array de candidatos ya cargados
+   private findCandidatoByEmail(email: string): Usuario | undefined {
+    return this.candidatos.find(candidato => candidato.email === email);
+  }
   
     // Método público para obtener el nombre completo desde la plantilla
     obtenerNombreCompleto(email: string): string {
-      const usuario = this.uService.getUsuarioByEmail(email);
+      const usuario = this.findCandidatoByEmail(email);
       if (usuario) {
         return `${usuario.nombre} ${usuario.apellidos}`;
       }
