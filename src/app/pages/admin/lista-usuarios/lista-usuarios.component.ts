@@ -39,7 +39,7 @@ cargarUsuarios(): void {
     },
     error: (error) => {
       console.error('Error al cargar usuarios:', error);
-      // Posiblemente mostrar un mensaje de error al usuario
+      
     }
   });
   
