@@ -106,8 +106,5 @@ export class UsuariosService {
       })
     );
   }
-  
-  // private persistirUsuarios(): void {
-  //   localStorage.setItem('usuarios', JSON.stringify(this.arrUsuarios));
-  // }
+
 }

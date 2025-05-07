@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
 import { Vacante, VacanteStatus } from '../interfaces/vacante';
-import { VACANTES_DB } from '../db/vacantes.db';
 import { Observable } from 'rxjs';
 import { environment } from '../enviroments/environment.development';
 import { HttpClient } from '@angular/common/http';
@@ -12,7 +11,6 @@ export class VacantesService {
 
   private apiUrl = `${environment.apiUrl}/vacantes`
   private http: HttpClient = inject(HttpClient);
-
 
   constructor() {}
 

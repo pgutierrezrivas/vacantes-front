@@ -10,13 +10,13 @@ import { Observable } from 'rxjs';
 })
 export class CategoriasService {
 
-private apiUrl = `${environment.apiUrl}/empresas`;
+private apiUrl = `${environment.apiUrl}/categorias`;
 private http: HttpClient = inject(HttpClient);
 
   constructor() { }
 
   getAllCategorias(): Observable <Categoria[]> {
-    return this.http.get<Categoria[]>(`${this.apiUrl}`);
+    return this.http.get<Categoria[]>(`${this.apiUrl}/todos`);
   }
 
   getCategoriaById(id: number): Observable<Categoria> {

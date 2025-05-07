@@ -1,0 +1,8 @@
+{
+    "/auth": {
+        "target": "https://reto.josbotdev.es",
+        "secure": false,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    }
+}

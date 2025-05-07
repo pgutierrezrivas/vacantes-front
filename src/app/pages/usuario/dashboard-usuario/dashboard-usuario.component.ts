@@ -4,6 +4,7 @@ import { Usuario } from '../../../interfaces/usuario';
 
 @Component({
   selector: 'app-dashboard-usuario',
+  standalone: true,
   imports: [RouterLink],
   templateUrl: './dashboard-usuario.component.html',
   styleUrl: './dashboard-usuario.component.css'
