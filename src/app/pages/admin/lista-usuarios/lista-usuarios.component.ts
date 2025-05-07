@@ -3,6 +3,7 @@ import { Usuario } from '../../../interfaces/usuario';
 import { UsuariosService } from '../../../services/usuarios.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-lista-usuarios',
@@ -12,7 +13,7 @@ import { CommonModule } from '@angular/common';
 })
 export class ListaUsuariosComponent {
 
-/*
+
   usuarios: Usuario[] = [];
   usuariosFiltrados: Usuario[] =[];
   usuarioSeleccionado: Usuario | null = null;
@@ -20,18 +21,31 @@ export class ListaUsuariosComponent {
   filtroRol: string = '';
   filtroEstado: string = '';
 
+  private subscriptions: Subscription = new Subscription();
+
 constructor(
   private uService: UsuariosService
 ) {}
 
 ngOnInit(): void{
-this.cargarUsuarios();
+  this.subscriptions.unsubscribe();
 }
 
 cargarUsuarios(): void {
-  this.usuarios = this.uService.getAllUsuarios();
-  this.usuariosFiltrados = [...this.usuarios]
+  const sub = this.uService.getAllUsuarios().subscribe({
+    next: (usuarios) => {
+      this.usuarios = usuarios;
+      this.usuariosFiltrados = [...this.usuarios];
+    },
+    error: (error) => {
+      console.error('Error al cargar usuarios:', error);
+      // Posiblemente mostrar un mensaje de error al usuario
+    }
+  });
+  
+  this.subscriptions.add(sub);
 }
+
 
 aplicarFiltros(): void {
   let resultado = [...this.usuarios];
@@ -78,30 +92,59 @@ abrirModalDesactivar(usuario: Usuario): void {
 
 desactivarUsuario(): void {
   if (this.usuarioSeleccionado) {
-    const success = this.uService.deshabilitarUsuario(this.usuarioSeleccionado.email);
-    if(success) {
-      alert('Usuario desactivado correctamente');
-      this.cargarUsuarios();
-    } else {
-      alert('Error al desactivar el usuario');
-    }
-    this.usuarioSeleccionado = null;
+    const sub = this.uService.deshabilitarUsuario(this.usuarioSeleccionado.email).subscribe({
+      next: (success) => {
+        if (success) {
+          alert('Usuario desactivado correctamente');
+          this.cargarUsuarios(); // Recargar la lista de usuarios
+        } else {
+          alert('Error al desactivar el usuario');
+        }
+        this.usuarioSeleccionado = null;
+      },
+      error: (error) => {
+        console.error('Error al desactivar usuario:', error);
+        alert('Error al desactivar el usuario');
+        this.usuarioSeleccionado = null;
+      }
+    });
+    
+    this.subscriptions.add(sub);
   }
 }
 
 activarUsuario(email: string): void {
-  const usuario = this.uService.getUserByEmail(email);
-  if (usuario) {
-    usuario.enabled = 1;
-    const success = this.uService.actualizarUsuario(usuario);
-    if (success) {
-      alert('Usuario activado correctamente');
-      this.cargarUsuarios();
-    } else {
-      alert('Error al activar el usuario');
+  // Primero obtenemos el usuario actual
+  const sub = this.uService.getUsuarioByEmail(email).subscribe({
+    next: (usuario) => {
+      if (usuario) {
+        // Cambiar el estado y actualizar
+        const usuarioActualizado = { ...usuario, enabled: 1 };
+        
+        this.uService.actualizarUsuario(usuarioActualizado).subscribe({
+          next: (result) => {
+            if (result) {
+              alert('Usuario activado correctamente');
+              this.cargarUsuarios();
+            } else {
+              alert('Error al activar el usuario');
+            }
+          },
+          error: (error) => {
+            console.error('Error al actualizar usuario:', error);
+            alert('Error al activar el usuario');
+          }
+        });
+      } else {
+        alert('No se pudo encontrar el usuario');
+      }
+    },
+    error: (error) => {
+      console.error('Error al buscar el usuario:', error);
+      alert('Error al buscar el usuario');
     }
-  }
+  });
+  
+  this.subscriptions.add(sub);
 }
-
-*/
 }
