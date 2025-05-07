@@ -19,8 +19,8 @@ export class EmpresasService {
     this.arrEmpresas = EMPRESAS_DB;
   }
 
-  getAllEmpresas() : Empresa[] {
-    return this.arrEmpresas;
+  getAllEmpresas(): Observable<Empresa[]> {
+    return this.http.get<Empresa[]>(`${this.apiUrl}/todos`);
   }
 
   getEmpresaPorUsuario(email: string): Observable<Empresa> {
@@ -28,36 +28,25 @@ export class EmpresasService {
   }
 
   getEmpresaById(id: number): Observable<Empresa>{
-    const empresa = this.arrEmpresas.find(e => e.id_empresa === id);
-    if(empresa) {
-      return of(empresa);
-    }
-    return throwError(() => new Error('Empresa no encontrada'))
+    return this.http.get<Empresa>(`${this.apiUrl}/uno/${id}`)
   }
 
   //crear
   crearEmpresa(empresa: Empresa, usuario: any): Observable<any> {
-    // cambiar a 
-    // return this.http.post<any>(`${this.apiUrl}/empresas`, { empresa, usuario });
-
-    const nextId = Math.max(...this.arrEmpresas.map(e => e.id_empresa)) + 1;
-    empresa.id_empresa = nextId;
-    
-    // añadir la empresa al array local
-    this.arrEmpresas.push(empresa);
-    
-    // simulacion respuesta del backend para testing
-    return of({
-      success: true,
-      message: 'Empresa creada con éxito',
-      data: {
-        empresa: empresa,
-        usuario: usuario
-      }
-    })
+    return this.http.post<Empresa>(`${this.apiUrl}/alta`, empresa);
   }
 
   
-  //deshabilitar / borrar
+  modificarEmpresa(empresa: Empresa): Observable<Empresa> {
+    return this.http.put<Empresa>(`${this.apiUrl}/modificar`, empresa);
+  }
+
+  eliminarEmpresa(id: number): Observable<number> {
+    return this.http.delete<number>(`${this.apiUrl}/eliminar/${id}`);
+  }
+
+  getSolicitudesEmpresa(idEmpresa: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/vacante/solicitudes/${idEmpresa}`);
+  }
 
 }

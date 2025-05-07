@@ -5,6 +5,7 @@ import { Empresa } from '../../../interfaces/empresa';
 import { EmpresasService } from '../../../services/empresas.service';
 import { UsuariosService } from '../../../services/usuarios.service';
 import { Usuario } from '../../../interfaces/usuario';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-lista-empresas',
@@ -17,9 +18,10 @@ export class ListaEmpresasComponent implements OnInit {
   empresas: Empresa[] = [];
   empresasFiltradas: Empresa[] = [];
   filtroTexto: string = '';
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
-    private empresasService: EmpresasService,
+    private eService: EmpresasService,
     private usuariosService: UsuariosService
   ) {}
 
@@ -28,8 +30,16 @@ export class ListaEmpresasComponent implements OnInit {
   }
 
   cargarEmpresas(): void {
-    this.empresas = this.empresasService.getAllEmpresas();
-    this.empresasFiltradas = [...this.empresas];
+   this.eService.getAllEmpresas().subscribe({
+    next: (empresas: Empresa[]) => {
+      this.empresas = empresas;
+      this.empresasFiltradas = [...this.empresas];
+    },
+    error: (error) => {
+      console.error('Error al cargar empresas: ', error);
+      alert('Error al cargar la lista de empresas')
+    }
+   });
   }
 
   aplicarFiltro(event: Event): void {
@@ -49,25 +59,52 @@ export class ListaEmpresasComponent implements OnInit {
   }
 
   deshabilitarEmpresa(id: number): void {
-    //aqui luego implementar la logica para deshabilitar una empresa
-    //actualizar el estado de la empresa
-    //deshabilitar el usuario asociado a la empresa
     if (confirm('¿Esta seguro de que desea desahabilitar una empresa? Tambien se deshabilitara el usuario asociado.')){
-    const empresa = this.empresas.find(e => e.id_empresa === id);
-    if (empresa) {
-      // Buscar el usuario asociado y deshabilitarlo
-      this.usuariosService.getUsuariosByRol('EMPRESA').subscribe((usuarios: Usuario[]) => {
-        const usuarioEmpresa = usuarios.find((u: Usuario) => u.email === empresa.email);
-        
-        if (usuarioEmpresa) {
-          this.usuariosService.deshabilitarUsuario(usuarioEmpresa.email).subscribe(() => {
-            alert('Empresa y usuario asociado deshabilitados correctamente');
-            //recargar la lista de empresas
-            this.cargarEmpresas();
-          });
-        }
-      });
-    }
+
+    this.eService.getEmpresaById(id).subscribe({
+      next: (empresa: Empresa) => {
+        this.usuariosService.getUsuariosByRol('EMPRESA').subscribe({
+          next: (usuarios: Usuario[]) => {
+            const usuarioEmpresa = usuarios.find((u: Usuario) => u.email === empresa.email);
+
+            if(usuarioEmpresa) {
+              this.usuariosService.deshabilitarUsuario(usuarioEmpresa.email).subscribe({
+                next: () => {
+                  this.eService.eliminarEmpresa(id).subscribe({
+                    next: () => {
+                      alert('Empresa y usuario asociado deshabilitados correctamente');
+                      this.cargarEmpresas();
+                    },error: (error) => {
+                      console.error('Error al eliminar la empresa:', error);
+                      alert('Error al deshabilitar la empresa');
+                    }
+                  });
+                },
+                error: (error) => {
+                  console.error('Error al deshabilitar el usuario:', error);
+                  alert('Error al deshabilitar el usuario asociado');
+                }
+              });
+            } else {
+              alert('No se encontró el usuario asociado a esta empresa');
+            }
+          },
+          error: (error) => {
+            console.error('Error al buscar usuarios:', error);
+            alert('Error al buscar el usuario asociado');
+          }
+        });
+      },
+      error: (error) => {
+        console.error('Error al obtener detalle de empresa:', error);
+        alert('Error al obtener información de la empresa');
+      }
+    });
   }
+}
+
+ngOnDestroy(): void {
+  // Limpiar todas las suscripciones para evitar memory leaks
+  this.subscriptions.unsubscribe();
 }
 }
