@@ -22,7 +22,6 @@ export class MisSolicitudesComponent {
   ) { }
 
   ngOnInit(): void {
-    //obtenemos el id del usuario del localStorage
     const usuarioGuardado = localStorage.getItem('usuario');
     if (usuarioGuardado) {
       const usuario = JSON.parse(usuarioGuardado);
@@ -35,7 +34,6 @@ export class MisSolicitudesComponent {
     this.cargando = true;
     this.error = null;
     
-    // Obtenemos todas las solicitudes de un usuario determinado
     this.solicitudService.getSolicitudesByUserEmail(this.idUsuario)
       .pipe(
         catchError(error => {
@@ -72,10 +70,8 @@ export class MisSolicitudesComponent {
       )
       .subscribe(resultado => {
         if (resultado) {
-          // Si la eliminación fue exitosa, actualizamos las solicitudes en el componente
           this.cargarSolicitudes();
         } else if (!this.error) {
-          // Si no hay un error de red pero la operación devolvió false
           this.error = "No se pudo anular la solicitud.";
         }
       });

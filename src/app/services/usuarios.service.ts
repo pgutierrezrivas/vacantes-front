@@ -26,7 +26,7 @@ export class UsuariosService {
       }),
       catchError((error) => {
         console.error('Error fetching usuarios:', error);
-        return of([]); // devuelve un array vacio en caso de error para que la aplicación no se rompa
+        return of([]);
       })
     );
   }
