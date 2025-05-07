@@ -7,7 +7,7 @@ import { VacantesService } from '../../../services/vacantes.service';
 import { UsuariosService } from '../../../services/usuarios.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { forkJoin, Observable } from 'rxjs';
+import { catchError, finalize, forkJoin, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-lista-solicitudes',
@@ -21,6 +21,8 @@ solicitudes: Solicitud[] = [];
 vacanteId: number = 0;
 vacante?: Vacante;  
 candidatos: Usuario[] = [];
+cargando: boolean = false;
+error: string | null = null;
 
 
   constructor(
@@ -42,47 +44,119 @@ candidatos: Usuario[] = [];
   }
  
   loadVacante(): void {
-    this.vacante = this.vService.getVacanteById(this.vacanteId);
+    this.cargando = true;
+    this.vService.getVacanteById(this.vacanteId)
+      .pipe(
+        catchError(error => {
+          console.error('Error al cargar la vacante:', error);
+          this.error = 'No se pudo cargar la información de la vacante';
+          return of(undefined);
+        }),
+        finalize(() => this.cargando = false)
+      )
+      .subscribe(vacante => {
+        if (vacante) {
+          this.vacante = vacante;
+        }
+      });
   }
 
   loadSolicitudes(): void {
-    //obtener todas las solicitudes para esta vacante
-    this.solicitudes = this.sService.getSolicitudesByVacanteId(this.vacanteId);
+    this.cargando = true;
+    // Obtener todas las solicitudes para esta vacante
+    this.sService.getSolicitudesByVacanteId(this.vacanteId)
+      .pipe(
+        catchError(error => {
+          console.error('Error al cargar las solicitudes:', error);
+          this.error = 'No se pudieron cargar las solicitudes';
+          return of([]);
+        }),
+        finalize(() => this.cargando = false)
+      )
+      .subscribe(solicitudes => {
+        this.solicitudes = solicitudes;
+        this.cargarCandidatos();
+      });
+  }
 
-    //cargar datos de usuarios para mostrar informacion de el/los canditato/s
-    this.candidatos = [];
+  cargarCandidatos(): void {
+    if (this.solicitudes.length === 0) {
+      return;
+    }
 
+    this.cargando = true;
     const userObservables: Observable<Usuario | undefined>[] = [];
 
     this.solicitudes.forEach(solicitud => {
-      userObservables.push(this.uService.getUsuarioByEmail(solicitud.email));
+      userObservables.push(
+        this.uService.getUsuarioByEmail(solicitud.email).pipe(
+          catchError(() => of(undefined))
+        )
+      );
     });
 
-    if (userObservables.length > 0) {
-      forkJoin(userObservables).subscribe(results => {
+    forkJoin(userObservables)
+      .pipe(finalize(() => this.cargando = false))
+      .subscribe(results => {
         this.candidatos = results.filter(user => user !== undefined) as Usuario[];
       });
-    }
   }
 
-  actualizarEstadoSolicitud(solicitud : Solicitud, estado : number): void {
-    //actualizar estado de la solicitud
-    this.sService.actualizarEstadoSolicitud(solicitud.id_solicitud, estado);
-
-    //si se adjudica la vacante (estado = 1), actualiza estado de la vaca cubierta
-    if ( estado === 1) {
-      this.vService.actualizarVacante(this.vacanteId, 'CUBIERTA');
-      this.vacante = this.vService.getVacanteById(this.vacanteId);
+ 
+  actualizarEstadoSolicitud(solicitud: Solicitud, estado: number): void {
+    this.cargando = true;
     
-    //Actualizar todas las demas solicitudes para esta vacante como no adjudicadas
-    this.solicitudes.forEach(s =>{
-      if (s.id_solicitud !== solicitud.id_solicitud) {
-        this.sService.actualizarEstadoSolicitud(s.id_solicitud, 0);
-      }
-    });
+    // Actualizar estado de la solicitud usando el servicio conectado a la API
+    this.sService.actualizarEstadoSolicitud(solicitud.id_solicitud, estado)
+      .pipe(
+        catchError(error => {
+          console.error('Error al actualizar el estado de la solicitud:', error);
+          alert('Error al actualizar el estado de la solicitud');
+          return of(false);
+        }),
+        finalize(() => this.cargando = false)
+      )
+      .subscribe(success => {
+        if (success && estado === 1 && this.vacante) {
+          // Si se adjudica la vacante (estado = 1), actualiza estado de la vacante a cubierta
+          this.vService.actualizarVacante(this.vacante, 'CUBIERTA')
+            .subscribe({
+              next: (vacante) => {
+                this.vacante = vacante;
+                
+                // Actualizar todas las demás solicitudes para esta vacante como no adjudicadas
+                const otherSolicitudes = this.solicitudes.filter(s => 
+                  s.id_solicitud !== solicitud.id_solicitud
+                );
+                
+                if (otherSolicitudes.length > 0) {
+                  this.cargando = true;
+                  const updateObservables = otherSolicitudes.map(s => 
+                    this.sService.actualizarEstadoSolicitud(s.id_solicitud, 0)
+                  );
+                  
+                  forkJoin(updateObservables)
+                    .pipe(finalize(() => {
+                      this.loadSolicitudes();
+                      this.cargando = false;
+                    }))
+                    .subscribe();
+                } else {
+                  this.loadSolicitudes();
+                }
+              },
+              error: (error) => {
+                console.error('Error al actualizar el estado de la vacante:', error);
+                alert('Error al actualizar el estado de la vacante');
+                this.cargando = false;
+              }
+            });
+        } else {
+          this.loadSolicitudes();
+        }
+      });
   }
-  this.loadSolicitudes();
-  }
+
 
   descargarCurriculum(archivo: string): void {
     //esta funcion simulario la descarga del CV

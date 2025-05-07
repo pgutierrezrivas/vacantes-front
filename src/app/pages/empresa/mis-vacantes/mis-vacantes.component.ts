@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Vacante } from '../../../interfaces/vacante';
 import { VacantesService } from '../../../services/vacantes.service';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { catchError, finalize, of } from 'rxjs';
 
 @Component({
   selector: 'app-mis-vacantes',
@@ -11,12 +12,14 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './mis-vacantes.component.html',
   styleUrl: './mis-vacantes.component.css'
 })
-export class MisVacantesComponent {
+export class MisVacantesComponent implements OnInit {
   misVacantes: Vacante[] = [];
   vacantesFiltradas: Vacante[] = [];
   idEmpresa: number = 0;
   filtroEstatus: string = 'TODAS';
   filtroBusqueda: string = '';
+  cargando: boolean = false;
+  error: string | null = null;
 
 
   constructor(
@@ -35,8 +38,21 @@ export class MisVacantesComponent {
 
   cargarVacantes(): void {
     //obtener todas las vcacantes de la empresa
-    this.misVacantes = this.vService.getVacantesByEmpresa(this.idEmpresa);
-    this.aplicarFiltros();
+    this.cargando = true; 
+    //Obtener todas las vacantes de la empresa
+    this.vService.getVacantesByEmpresa(this.idEmpresa)
+    .pipe(
+      catchError(error => {
+        console.error('Error al cargar vacantes: ', error);
+        this.error = 'No se puedieronc argar las vacantes. Por favor, intentelo de nuevo'
+        return of([]);
+      }),
+      finalize(() => this.cargando = false)
+    )
+    .subscribe(vacantes => {
+      this.misVacantes = this.vacantesFiltradas;
+      this.aplicarFiltros();
+    })
   }
 
 
@@ -56,27 +72,43 @@ export class MisVacantesComponent {
 
 
 
-  cambiarEstadoVacante(vacante : Vacante, nuevoEstado: 'CREADA' | 'CUBIERTA' | 'CANCELADA'): void {
-    try {
-      this.vService.actualizarVacante(vacante.id_vacante, nuevoEstado);
-      this.cargarVacantes(); //recargar vacantes para mostrar los cambios
-      alert(`Estado de la vacante "${vacante.nombre}" actualizado a ${nuevoEstado}`);
-    } catch (error) {
-      console.error('Error al actualizar el estado de la vacantes', error);
-      alert('Error al actualizar el estado de la vacante. Intenetelo de neuvo mas tarde.')
-    }
+  cambiarEstadoVacante(vacante: Vacante, nuevoEstado: 'CREADA' | 'CUBIERTA' | 'CANCELADA'): void {
+    this.cargando = true;
+    this.vService.actualizarVacante(vacante, nuevoEstado)
+      .pipe(
+        catchError(error => {
+          console.error('Error al actualizar el estado de la vacante', error);
+          alert('Error al actualizar el estado de la vacante. Inténtelo de nuevo más tarde.');
+          return of(null);
+        }),
+        finalize(() => this.cargando = false)
+      )
+      .subscribe(result => {
+        if (result) {
+          this.cargarVacantes(); // Recargar vacantes para mostrar los cambios
+          alert(`Estado de la vacante "${vacante.nombre}" actualizado a ${nuevoEstado}`);
+        }
+      });
   }
 
   eliminarVacante(idVacante: number, nombreVacante: string): void {
     if(confirm(`¿Esta seguro que desea eliminar la vacante "${nombreVacante}"?`)) {
-      try {
-        this.vService.eliminarVacante(idVacante);
-        this.cargarVacantes(); //recargamos vacantes
-        alert(`Vacante "${nombreVacante}" eliminada correctamente`);
-      } catch (error){
-        console.error('Error al eliminar la vacante', error);
-        alert('Error al eliminar la vacante. Intentelo de nuevo mas tarde')
-      }
+      this.cargando = true;
+      this.vService.eliminarVacante(idVacante)
+        .pipe(
+          catchError(error => {
+            console.error('Error al eliminar la vacante', error);
+            alert('Error al eliminar la vacante. Intentelo de nuevo mas tarde');
+            return of(0);
+          }),
+          finalize(() => this.cargando = false)
+        )
+        .subscribe(result => {
+          if (result === 1) {
+            this.cargarVacantes();
+            alert(`Vacante "${nombreVacante}" eliminada correctamente`)
+          }
+        })
     }
   }
 

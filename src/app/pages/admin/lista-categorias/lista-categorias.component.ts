@@ -24,7 +24,7 @@ export class ListaCategoriasComponent implements OnInit {
   filtroTexto: string = '';
 
   constructor(
-    private categoriasService: CategoriasService
+    private cService: CategoriasService
   ) {}
 
   ngOnInit(): void {
@@ -32,8 +32,16 @@ export class ListaCategoriasComponent implements OnInit {
   }
 
   cargarCategorias(): void {
-    this.categorias = this.categoriasService.getAllCategorias();
-    this.categoriasFiltradas = [...this.categorias];
+    this.cService.getAllCategorias().subscribe({
+      next: (data) => {
+        this.categorias = data;
+        this.categoriasFiltradas = [...this.categorias];
+      },
+      error: (error) => {
+        console.error('Error al cargar categorias' , error);
+        alert('Error al cargar las categorias. Intentelo mas tarde')
+      }
+    });
   }
 
   aplicarFiltro(event: Event): void {
@@ -51,7 +59,7 @@ export class ListaCategoriasComponent implements OnInit {
   }
 
   prepararNuevaCategoria(): void {
-    //this.categoriaActual = { id_categoria: 0, nombre: '' };
+    this.categoriaActual = {id_categoria: 0, nombre: '', descripcion: ''};
     this.modoEdicion = false;
   }
 
@@ -61,7 +69,6 @@ export class ListaCategoriasComponent implements OnInit {
   }
 
   guardarCategoria(): void {
-    alert('HACER!!')
     if (!this.categoriaActual.nombre.trim()) {
       alert('El nombre de la categoría es obligatorio');
       return;
@@ -69,20 +76,46 @@ export class ListaCategoriasComponent implements OnInit {
 
     if (this.modoEdicion) {
       // Actualizar categoría existente
-    this.categoriasService.actualizarCategoria(this.categoriaActual);
-      alert('Categoría actualizada correctamente');
+    this.cService.actualizarCategoria(this.categoriaActual).subscribe({
+      next: (categoriaActualizada) => {
+        alert('Categoria actualizada correctamente');
+        this.cargarCategorias();
+        this.prepararNuevaCategoria();
+      },
+      error: (error) => {
+        console.error('Error al actualizar categoria', error);
+        alert('Error al actualizar la categoria');
+      }
+    });
     } else {
       // Crear nueva categoría
-    this.categoriasService.crearCategoria(this.categoriaActual);
-      alert('Categoría creada correctamente');
+    this.cService.crearCategoria(this.categoriaActual).subscribe({
+      next: (categoriaNueva) => {
+        alert('Categoría creada correctamente');
+        this.cargarCategorias();
+        this.prepararNuevaCategoria();
+      },
+      error: (error) => {
+        console.error('Error al crear categoria: ', error);
+        alert('Error al crear la categoria');
+      }
+    });
     }
-
-    this.cargarCategorias();
-    this.prepararNuevaCategoria();
   }
 
-  eliminarCategoria(arg0: number) {
-    throw new Error('Method not implemented.');
+  eliminarCategoria(id: number) {
+    if(confirm('¿Esta seguro de que desea eliminar esta categoria?')) {
+      this.cService.eliminarCategoria(id).subscribe({
+        next: () => {
+          alert('Categoria eliminada correctamente');
+          this.cargarCategorias();
+        },
+        error: (error) => {
+          console.error('Error al eliminar categoria', error);
+          alert('Error al eliminar la categoria');
+        }
+      })
+    }
     }
 
 

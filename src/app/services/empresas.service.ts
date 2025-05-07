@@ -13,11 +13,7 @@ export class EmpresasService {
   private apiUrl = `${environment.apiUrl}/empresas`;
   private http: HttpClient = inject(HttpClient);
 
-  private arrEmpresas : Empresa[];
-
-  constructor() { 
-    this.arrEmpresas = EMPRESAS_DB;
-  }
+  constructor() { }
 
   getAllEmpresas(): Observable<Empresa[]> {
     return this.http.get<Empresa[]>(`${this.apiUrl}/todos`);

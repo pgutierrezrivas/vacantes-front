@@ -1,91 +1,72 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Vacante, VacanteStatus } from '../interfaces/vacante';
 import { VACANTES_DB } from '../db/vacantes.db';
+import { Observable } from 'rxjs';
+import { environment } from '../enviroments/environment.development';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VacantesService {
 
-  private arrVacantes : Vacante[];
-  private nextId: number;
+  private apiUrl = `${environment.apiUrl}/vacantes`
+  private http: HttpClient = inject(HttpClient);
 
-  constructor() { 
-    const storedVacantes = localStorage.getItem('vacantes');
-    if(storedVacantes) {
-      this.arrVacantes = JSON.parse(storedVacantes);
-    } else {
-      this.arrVacantes = VACANTES_DB;
-    }
-    this.nextId = this.calculateNextId();
+
+  constructor() {}
+
+  getAllVacantes() :  Observable<Vacante[]>  {
+    return this.http.get<Vacante[]>(`${this.apiUrl}/todos`);
   }
 
-  getAllVacantes() : Vacante[] {
-    return this.arrVacantes;
+  getVacanteById(id: number):  Observable<Vacante>  {
+    return this.http.get<Vacante>(`${this.apiUrl}/uno/${id}`);
   }
 
-  getVacanteById(id: number): Vacante | undefined {
-    return this.arrVacantes.find(v => v.id_vacante === id);
+  getVacantesByEmpresa(empresaId: number): Observable<Vacante[]> {
+    // mirar si existe este endpoint en el back
+    // Si no existe, se debe implementar en VacanteController
+    return this.http.get<Vacante[]>(`${this.apiUrl}/empresa/${empresaId}`);
   }
 
-  getVacantesByEmpresa(empresaId: number): Vacante[] {
-    return this.arrVacantes.filter(v => v.id_empresa === empresaId);
+  crearVacante(vacante: Vacante): Observable<Vacante> {
+    return this.http.post<Vacante>(
+      `${this.apiUrl}/alta`, 
+      vacante, 
+      { params: { 
+        id_categoria: vacante.id_Categoria.toString(), 
+        id_empresa: vacante.id_empresa.toString() 
+      }}
+    );
   }
 
-  crearVacante(vacante: Vacante): Vacante {
-    //nuevo id
-    vacante.id_vacante = this.nextId++;
-
-    //añadir al array
-    this.arrVacantes.push(vacante);
-
-    //simular presencia en localstorage
-    this.persistirVacantes();
-
-    return vacante;
-  }
-
-  actualizarVacante(idVacante: number, nuevoEstado: VacanteStatus): boolean {
-    const vacante = this.getVacanteById(idVacante);
-
-    if (vacante) {
-      vacante.estatus = nuevoEstado;
-      this.persistirVacantes();
-      return true;
-    }
-    return false;
-  }
-
-
-  actualizarVacanteCompleta(vacante: Vacante): Vacante | undefined {
-    const index = this.arrVacantes.findIndex(v => v.id_vacante === vacante.id_vacante);
-
-    if (index !== -1) {
-      this.arrVacantes[index] = vacante;
-      this.persistirVacantes();
-      return vacante;
-    }
-    return undefined;
-  }
-
-  eliminarVacante(idVacante: number): boolean {
-    const index = this.arrVacantes.findIndex(v => v.id_vacante === idVacante);
-    
-    if (index !== -1) {
-      this.arrVacantes.splice(index, 1);
-      this.persistirVacantes();
-      return true;
-    }
-    return false;
-  }
-
-  private calculateNextId(): number {
-    return Math.max(...this.arrVacantes.map(v => v.id_vacante), 0) + 1;
-  }
-
-private persistirVacantes(): void {
+  actualizarVacante(vacante: Vacante, nuevoEstado: VacanteStatus): Observable<Vacante> {
   
-  localStorage.setItem('vacantes', JSON.stringify(this.arrVacantes));
-}
+    const vacanteActualizada: Vacante = {
+      ...vacante,
+      estatus: nuevoEstado
+    };
+    
+    return this.actualizarVacanteCompleta(vacanteActualizada);
+  }
+
+
+  actualizarVacanteCompleta(vacante: Vacante): Observable<Vacante> {
+    return this.http.put<Vacante>(
+      `${this.apiUrl}/modificar`, 
+      vacante, 
+      { params: { 
+        id_categoria: vacante.id_Categoria.toString(), 
+        id_empresa: vacante.id_empresa.toString() 
+      }}
+    );
+  }
+
+  eliminarVacante(idVacante: number): Observable<number> {
+    return this.http.delete<number>(`${this.apiUrl}/eliminar/${idVacante}`);
+  }
+
+
 
 }

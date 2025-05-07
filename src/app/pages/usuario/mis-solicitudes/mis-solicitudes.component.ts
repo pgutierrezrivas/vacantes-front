@@ -3,6 +3,7 @@ import { Solicitud } from '../../../interfaces/solicitud';
 import { SolicitudesService } from '../../../services/solicitudes.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { catchError, finalize, of } from 'rxjs';
 
 @Component({
   selector: 'app-mis-solicitudes',
@@ -13,6 +14,8 @@ import { RouterLink } from '@angular/router';
 export class MisSolicitudesComponent {
   solicitudes: Solicitud[] = [];
   idUsuario: string = '';
+  cargando: boolean = false;
+  error: string | null = null;
 
   constructor(
     private solicitudService: SolicitudesService
@@ -29,22 +32,52 @@ export class MisSolicitudesComponent {
   }
 
   cargarSolicitudes(): void {
-    //obtenemos todas las solicitudes de un usuario determinado
-    this.solicitudes = this.solicitudService.getSolicitudesByUserEmail(this.idUsuario);
+    this.cargando = true;
+    this.error = null;
+    
+    // Obtenemos todas las solicitudes de un usuario determinado
+    this.solicitudService.getSolicitudesByUserEmail(this.idUsuario)
+      .pipe(
+        catchError(error => {
+          console.error('Error al cargar solicitudes:', error);
+          this.error = 'No se pudieron cargar tus solicitudes. Por favor, intenta de nuevo más tarde.';
+          return of([] as Solicitud[]); 
+        }),
+        finalize(() => {
+          this.cargando = false; 
+        })
+      )
+      .subscribe(solicitudes => {
+        this.solicitudes = solicitudes;
+      });
   }
 
   anularSolicitud(id: number): void {
     const confirmacion = confirm("¿Quieres anular esta solicitud?");
     if (!confirmacion) return;
 
-    const resultado = this.solicitudService.eliminarSolicitud(id);
-    if (resultado) {
-      // actualizamos las solicitudes en el componente
-      this.cargarSolicitudes();
-    } else {
-      alert("No se pudo anular la solicitud.");
-    }
+    this.cargando = true;
+    this.error = null;
+    
+    this.solicitudService.eliminarSolicitud(id)
+      .pipe(
+        catchError(error => {
+          console.error('Error al anular solicitud:', error);
+          this.error = 'No se pudo anular la solicitud.';
+          return of(false);
+        }),
+        finalize(() => {
+          this.cargando = false;
+        })
+      )
+      .subscribe(resultado => {
+        if (resultado) {
+          // Si la eliminación fue exitosa, actualizamos las solicitudes en el componente
+          this.cargarSolicitudes();
+        } else if (!this.error) {
+          // Si no hay un error de red pero la operación devolvió false
+          this.error = "No se pudo anular la solicitud.";
+        }
+      });
   }
-
-
 }

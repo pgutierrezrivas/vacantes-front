@@ -18,6 +18,8 @@ vacanteForm!: FormGroup;
 categorias: Categoria[] = [];
 idEmpresa: number = 0;
 submitted = false;
+cargando = false;
+error: string | null = null;
 
 constructor(
 private fb: FormBuilder,
@@ -42,8 +44,18 @@ ngOnInit(): void {
 }
 
 obtenerCategorias(): void {
-  // Asignar directamente el resultado a nuestra propiedad categorias
-  this.categorias = this.cService.getAllCategorias();
+  this.cargando = true;
+  this.cService.getAllCategorias().subscribe({
+    next: (data) => {
+      this.categorias = data;
+      this.cargando = false;
+    },
+    error: (err) => {
+      console.error('Error al cargar categorias', err);
+      this.error = 'No se pudieron cargar las categorias, Por favor, intentelo de nuevo';
+      this.cargando = false;
+    }
+  })
 }
 
 inicializarFormulario(): void {
@@ -66,27 +78,32 @@ onSubmit(): void {
     console.log('Formulario invalido');
     return;
   }
+
+  const destacadoByte = this.vacanteForm.value.destacado ? 1 : 0;
   //crear el objeto vacante con los valores del formulario
   const nuevaVacante: Vacante = {
     ...this.vacanteForm.value, 
     id_vacante: 0, //se asignara automaticamente en el backend
     fecha: new Date(),
     estatus: 'CREADA' as VacanteStatus,
-    id_empresa: this.idEmpresa
+    id_empresa: this.idEmpresa,
+    destacado: destacadoByte
   };
 
-  try {
-    //llamar al service para guardar vacvnte
-    this.vService.crearVacante(nuevaVacante);
+  this.cargando = true;
 
-    //exito
-    alert('Vacante publicada correctamente');
-
-    this.router.navigate(['/empresa/dashboard']);
-  } catch (error) {
-    console.error('Error al crear la vacante: ', error);
-    alert('Error al publicar la vacante. Intentelo de nuevo mas tarde')
-  }
+  this.vService.crearVacante(nuevaVacante).subscribe({
+    next: (vacante) => {
+      this.cargando = false;
+      alert('Vacante publicada correctamente');
+        this.router.navigate(['/empresa/dashboard']);
+    },
+    error: (error) => {
+      this.cargando = false;
+      console.error('Error al crear la vacante:', error);
+      alert('Error al publicar la vacante. Inténtelo de nuevo más tarde');
+    }
+  });
 }
 
 cancelar(): void {

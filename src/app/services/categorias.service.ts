@@ -1,32 +1,37 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { CATEGORIAS_DB } from '../db/categorias.db';
 import { Categoria } from '../interfaces/categoria';
+import { environment } from '../enviroments/environment.development';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoriasService {
 
+private apiUrl = `${environment.apiUrl}/empresas`;
+private http: HttpClient = inject(HttpClient);
 
-  private arrCategorias : Categoria[];
+  constructor() { }
 
-  constructor() { 
-    this.arrCategorias = CATEGORIAS_DB;
+  getAllCategorias(): Observable <Categoria[]> {
+    return this.http.get<Categoria[]>(`${this.apiUrl}`);
   }
 
-  getAllCategorias(): Categoria[] {
-    return this.arrCategorias;
+  getCategoriaById(id: number): Observable<Categoria> {
+    return this.http.get<Categoria>(`${this.apiUrl}/${id}`)
   }
 
-  getCategoriaById(id: number): Categoria |undefined {
-    return this.arrCategorias.find(cat => cat.id_categoria === id);
+  crearCategoria(categoriaActual: Categoria): Observable<Categoria>{
+    return this.http.post<Categoria>(`${this.apiUrl}`, categoriaActual);
+  }
+  actualizarCategoria(categoriaActual: Categoria): Observable<Categoria> {
+    return this.http.put<Categoria>(`${this.apiUrl}`, categoriaActual);
   }
 
-  crearCategoria(categoriaActual: Categoria) {
-    throw new Error('Method not implemented.');
-  }
-  actualizarCategoria(categoriaActual: Categoria) {
-    throw new Error('Method not implemented.');
+  eliminarCategoria(id: number): Observable<any> {
+    return this.http.delete<Categoria>(`${this.apiUrl}/${id}`);
   }
 
 }

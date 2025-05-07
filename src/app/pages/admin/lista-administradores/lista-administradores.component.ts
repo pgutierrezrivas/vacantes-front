@@ -3,6 +3,7 @@ import { Usuario } from '../../../interfaces/usuario';
 import { UsuariosService } from '../../../services/usuarios.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CategoriasService } from '../../../services/categorias.service';
 
 @Component({
   selector: 'app-lista-administradores',
@@ -51,6 +52,7 @@ export class ListaAdministradoresComponent {
     );
   }
 
+ 
   prepararNuevoAdministrador(): void {
     this.administradorActual = {
       email: '',
