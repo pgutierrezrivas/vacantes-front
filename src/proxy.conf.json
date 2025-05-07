@@ -1,0 +1,38 @@
+{
+    "/auth": {
+        "target": "https://reto.josbotdev.es",
+        "secure": false,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    },
+    "/vacantes": {
+        "target": "https://reto.josbotdev.es",
+        "secure": false,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    },
+    "/solicitudes": {
+        "target": "https://reto.josbotdev.es",
+        "secure": false,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    },
+    "/empresas": {
+        "target": "https://reto.josbotdev.es",
+        "secure": false,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    },
+    "/categorias": {
+        "target": "https://reto.josbotdev.es",
+        "secure": false,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    },
+    "/usuarios": {
+        "target": "https://reto.josbotdev.es",
+        "secure": false,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    }
+}

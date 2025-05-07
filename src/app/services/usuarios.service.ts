@@ -10,7 +10,9 @@ import { environment } from '../enviroments/environment.development';
 })
 export class UsuariosService {
 
-  private apiUrl = `${environment.apiUrl}/usuarios`;
+  //private apiUrl = `${environment.apiUrl}/usuarios`;
+  private apiUrl = '/usuarios';
+
   private http: HttpClient = inject(HttpClient);
 
   constructor() {}

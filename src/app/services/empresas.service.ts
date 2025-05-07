@@ -10,7 +10,9 @@ import { HttpClient } from '@angular/common/http';
 })
 export class EmpresasService {
 
-  private apiUrl = `${environment.apiUrl}/empresas`;
+  // apiUrl = `${environment.apiUrl}/empresas`;
+  private apiUrl = '/empresas';
+
   private http: HttpClient = inject(HttpClient);
 
   constructor() { }

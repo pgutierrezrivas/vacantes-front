@@ -9,7 +9,9 @@ import { HttpClient } from '@angular/common/http';
 })
 export class VacantesService {
 
-  private apiUrl = `${environment.apiUrl}/vacantes`
+  //private apiUrl = `${environment.apiUrl}/vacantes`
+  private apiUrl = '/vacantes';
+
   private http: HttpClient = inject(HttpClient);
 
   constructor() {}

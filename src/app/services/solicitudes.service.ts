@@ -10,7 +10,9 @@ import { catchError, map, Observable, switchMap, throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class SolicitudesService {
-  private apiUrl = `${environment.apiUrl}/solicitudes`;
+  //private apiUrl = `${environment.apiUrl}/solicitudes`;
+  private apiUrl = '/solicitudes';
+
 
 
   constructor(private http: HttpClient) {}

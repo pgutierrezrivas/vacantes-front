@@ -16,7 +16,9 @@ export class AuthService {
   private _usuario = new BehaviorSubject<Usuario | null>(null);
   usuario$ = this._usuario.asObservable();
 
-  private apiUrl = `${environment.apiUrl}/auth`;
+  //private apiUrl = `${environment.apiUrl}/auth`;
+  private apiUrl = '/auth';
+
 
   // almacenamos la contraseña en memoria
   private _password: string | null = null;
@@ -91,7 +93,7 @@ export class AuthService {
 
   // metodo para obtener los datos completos de un usuario (lo usamos en el login)
   private fetchUsuarioCompleto(email: string): Observable<Usuario> {
-    return this.http.get<Usuario>(`${environment.apiUrl}/usuarios/uno/${email}`).pipe(
+    return this.http.get<Usuario>(`${this.apiUrl}/userByEmail/${email}`).pipe(
       tap(usuarioCompleto => {
         this._usuario.next(usuarioCompleto);
         localStorage.setItem('usuario', JSON.stringify(usuarioCompleto));
