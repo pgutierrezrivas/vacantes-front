@@ -36,6 +36,7 @@ export class ListaVacantesComponent implements OnInit, OnDestroy {
         this.vacantes = vacantes;
         this.aplicarFiltros();
         console.log('Vacantes recibidas:', vacantes);
+        console.log('Ejemplo de vacante:', this.vacantes[0]);
       },
       error: (error) => {
         console.error('Error al cargar vacantes: ', error);
@@ -45,34 +46,45 @@ export class ListaVacantesComponent implements OnInit, OnDestroy {
   }
 
   aplicarFiltros(): void {
-    let resultado = this.vacantes
-
+    let resultado = this.vacantes;
+  
     // filtrado por nombre
-    if (this.filtroNombre) {
+    if (this.filtroNombre.trim() !== '') {
+      const texto = this.filtroNombre.trim().toLowerCase();
       resultado = resultado.filter(vacante =>
-        vacante.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase())
+        vacante.nombre.toLowerCase().includes(texto)
       );
     }
-
-    // filtro por fecha
-    if (this.filtroFecha === 'reciente') {
-      resultado = resultado.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
-    } else if (this.filtroFecha === 'antigua') {
-      resultado = resultado.sort((a, b) => a.fecha.getTime() - b.fecha.getTime());
-    }
-
-    // filtro por salario 
-    if (this.filtroSalario === 'mayor') {
-      resultado = resultado.sort((a, b) => b.salario - a.salario);
-    } else if (this.filtroSalario === 'menor') {
-      resultado = resultado.sort((a, b) => a.salario - b.salario);
-    }
-
+  
+    // Orden combinado (primero por fecha, luego por salario si hay empate)
+    resultado = resultado.sort((a, b) => {
+      // filtro por fecha 
+      let comparacionFecha = 0;
+      if (this.filtroFecha === 'reciente') {
+        comparacionFecha = new Date(b.fecha).getTime() - new Date(a.fecha).getTime();
+      } else if (this.filtroFecha === 'antigua') {
+        comparacionFecha = new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
+      }
+  
+      // si ya hay diferencia por fecha, devuelvo esa comparacion
+      if (comparacionFecha !== 0) return comparacionFecha;
+  
+      // filtro por salario solo si no hay diferencia de fecha
+      if (this.filtroSalario === 'mayor') {
+        return b.salario - a.salario;
+      } else if (this.filtroSalario === 'menor') {
+        return a.salario - b.salario;
+      }
+  
+      return 0; // sin cambios
+    });
+  
     this.vacantesFiltradas = resultado;
   }
 
+  
   ngOnDestroy(): void {
-    // Limpiar todas las suscripciones para evitar memory leaks
+    // limpiar todas las suscripciones para evitar memory leaks
     this.subscriptions.unsubscribe();
   }
 

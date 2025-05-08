@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Empresa } from '../interfaces/empresa';
-import { EMPRESAS_DB } from '../db/empresas.db';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../enviroments/environment.development';
 import { HttpClient } from '@angular/common/http';
 

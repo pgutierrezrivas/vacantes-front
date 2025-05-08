@@ -4,8 +4,6 @@ import { environment } from '../enviroments/environment.development';
 import { HttpClient , HttpErrorResponse} from '@angular/common/http';
 import { catchError, map, Observable, switchMap, throwError } from 'rxjs';
 
-
-
 @Injectable({
   providedIn: 'root'
 })

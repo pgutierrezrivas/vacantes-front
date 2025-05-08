@@ -4,7 +4,6 @@ import { Observable, map, catchError, of } from 'rxjs';
 import { Usuario } from '../interfaces/usuario';
 import { environment } from '../enviroments/environment.development';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -13,7 +12,7 @@ export class UsuariosService {
   private apiUrl = `${environment.apiUrl}/usuarios`;
   private http: HttpClient = inject(HttpClient);
 
-  constructor() {}
+  constructor() { }
 
   getAllUsuarios(): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(this.apiUrl).pipe(
@@ -31,7 +30,7 @@ export class UsuariosService {
     );
   }
 
-  // metodo para obtener usuario por ID
+  // metodo para obtener usuario por id
   getUsuarioById(id: string): Observable<Usuario | undefined> {
     return this.http.get<Usuario>(`${this.apiUrl}/${id}`).pipe(
       map(user => ({
@@ -51,23 +50,23 @@ export class UsuariosService {
       map(usuarios => usuarios.filter(usuario => usuario.rol === rol))
     )
   }
-  
-  // Metodo para obtener usuario por email (GET /usuarios/uno/{email}
+
+  // metodo para obtener usuario por email
   getUsuarioByEmail(email: string): Observable<Usuario | undefined> {
     return this.http.get<Usuario>(`${this.apiUrl}/uno/${email}`).pipe(
       map(user => ({
         ...user,
         fecha_Registro: new Date(user.fecha_Registro),
-        enabled: user.enabled ? 1 : 0, 
+        enabled: user.enabled ? 1 : 0,
       })),
       catchError((error) => {
         console.error(`Error fetching usuario con email ${email}: `, error);
-        return of (undefined);
+        return of(undefined);
       })
     );
   }
 
-  // Metodo para crear un nuevo usuario (POST /usuarios/alta)
+  // metodo para crear un nuevo usuario
   crearUsuario(usuario: Usuario): Observable<Usuario | undefined> {
     return this.http.post<Usuario>(`${this.apiUrl}/alta`, usuario).pipe(
       map(user => ({
@@ -77,12 +76,12 @@ export class UsuariosService {
       })),
       catchError((error) => {
         console.error('Error creando el usuario', error)
-        return of (undefined)
+        return of(undefined)
       })
     )
   }
 
-  // metodo para actualizar un usuario (PUT /usuarios/modificar)
+  // metodo para actualizar un usuario
   actualizarUsuario(usuario: Usuario): Observable<Usuario | undefined> {
     return this.http.put<Usuario>(`${this.apiUrl}/modificar`, usuario).pipe(
       map(user => ({
@@ -96,8 +95,9 @@ export class UsuariosService {
       })
     );
   }
-  // metodo para deshabilitar/eliminar un usuario (DELETE /usuarios/eliminar/{email})
-  deshabilitarUsuario(email: string):Observable<boolean> {
+
+  // metodo para deshabilitar/eliminar un usuario
+  deshabilitarUsuario(email: string): Observable<boolean> {
     return this.http.delete<number>(`${this.apiUrl}/eliminar/${email}`).pipe(
       map(result => result > 0),
       catchError((error) => {

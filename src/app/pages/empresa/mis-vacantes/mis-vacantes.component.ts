@@ -22,9 +22,7 @@ export class MisVacantesComponent implements OnInit {
   error: string | null = null;
 
 
-  constructor(
-    private vService: VacantesService
-  ) {}
+  constructor(private vService: VacantesService) { }
 
   ngOnInit(): void {
     //Obtener el id de la empresa del localStoraGE
@@ -38,23 +36,22 @@ export class MisVacantesComponent implements OnInit {
 
   cargarVacantes(): void {
     //obtener todas las vcacantes de la empresa
-    this.cargando = true; 
+    this.cargando = true;
     //Obtener todas las vacantes de la empresa
     this.vService.getVacantesByEmpresa(this.idEmpresa)
-    .pipe(
-      catchError(error => {
-        console.error('Error al cargar vacantes: ', error);
-        this.error = 'No se puedieronc argar las vacantes. Por favor, intentelo de nuevo'
-        return of([]);
-      }),
-      finalize(() => this.cargando = false)
-    )
-    .subscribe(vacantes => {
-      this.misVacantes = this.vacantesFiltradas;
-      this.aplicarFiltros();
-    })
+      .pipe(
+        catchError(error => {
+          console.error('Error al cargar vacantes: ', error);
+          this.error = 'No se puedieronc argar las vacantes. Por favor, intentelo de nuevo'
+          return of([]);
+        }),
+        finalize(() => this.cargando = false)
+      )
+      .subscribe(vacantes => {
+        this.misVacantes = this.vacantesFiltradas;
+        this.aplicarFiltros();
+      })
   }
-
 
   aplicarFiltros(): void {
     this.vacantesFiltradas = this.misVacantes.filter(vacante => {
@@ -69,8 +66,6 @@ export class MisVacantesComponent implements OnInit {
       return cumpleFiltroEstatus && cumpleFiltroTexto;
     });
   }
-
-
 
   cambiarEstadoVacante(vacante: Vacante, nuevoEstado: 'CREADA' | 'CUBIERTA' | 'CANCELADA'): void {
     this.cargando = true;
@@ -92,7 +87,7 @@ export class MisVacantesComponent implements OnInit {
   }
 
   eliminarVacante(idVacante: number, nombreVacante: string): void {
-    if(confirm(`¿Esta seguro que desea eliminar la vacante "${nombreVacante}"?`)) {
+    if (confirm(`¿Esta seguro que desea eliminar la vacante "${nombreVacante}"?`)) {
       this.cargando = true;
       this.vService.eliminarVacante(idVacante)
         .pipe(
@@ -111,6 +106,5 @@ export class MisVacantesComponent implements OnInit {
         })
     }
   }
-
 
 }

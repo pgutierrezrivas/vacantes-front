@@ -1,5 +1,4 @@
 import { inject, Injectable } from '@angular/core';
-import { CATEGORIAS_DB } from '../db/categorias.db';
 import { Categoria } from '../interfaces/categoria';
 import { environment } from '../enviroments/environment.development';
 import { HttpClient } from '@angular/common/http';

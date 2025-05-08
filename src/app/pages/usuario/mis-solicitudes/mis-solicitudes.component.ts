@@ -33,16 +33,16 @@ export class MisSolicitudesComponent {
   cargarSolicitudes(): void {
     this.cargando = true;
     this.error = null;
-    
+
     this.solicitudService.getSolicitudesByUserEmail(this.idUsuario)
       .pipe(
         catchError(error => {
           console.error('Error al cargar solicitudes:', error);
           this.error = 'No se pudieron cargar tus solicitudes. Por favor, intenta de nuevo más tarde.';
-          return of([] as Solicitud[]); 
+          return of([] as Solicitud[]);
         }),
         finalize(() => {
-          this.cargando = false; 
+          this.cargando = false;
         })
       )
       .subscribe(solicitudes => {
@@ -56,7 +56,7 @@ export class MisSolicitudesComponent {
 
     this.cargando = true;
     this.error = null;
-    
+
     this.solicitudService.eliminarSolicitud(id)
       .pipe(
         catchError(error => {
@@ -76,4 +76,5 @@ export class MisSolicitudesComponent {
         }
       });
   }
+
 }

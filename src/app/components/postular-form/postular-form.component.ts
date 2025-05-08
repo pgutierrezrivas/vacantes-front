@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SolicitudesService } from '../../services/solicitudes.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -41,7 +41,7 @@ export class PostularFormComponent {
         Validators.required,
         Validators.pattern('https?://.+'),
       ]),
-      id_Vacante: new FormControl(null, []), // valor neutro
+      idVacante: new FormControl(null, []), // valor neutro
       email: new FormControl('', []) // valor neutro
     }, []);
   }
@@ -68,31 +68,29 @@ export class PostularFormComponent {
     const formValue: Solicitud = this.postularForm.value as Solicitud;
 
     const nuevaSolicitud: Solicitud = {
-      id_solicitud: 0, // Lo ignora el backend
+      idSolicitud: 0, // Lo ignora el backend
       fecha: new Date(formValue.fecha),
       archivo: formValue.archivo,
       comentarios: formValue.comentarios,
       estado: 0, // porque se presenta una nueva solicitud
       curriculum: formValue.curriculum,
-      id_Vacante: this.idVacante!,
+      idVacante: this.idVacante!,
       email: formValue.email
     };
 
     if (this.postularForm.valid) {
-      try {
-        this.solicitudService.agregarSolicitud(nuevaSolicitud);
-        console.log('Solicitud realizada: ', nuevaSolicitud);
-        alert('Solicitud creada correctamente');
-
-        // cerrar el modal haciendo clic en el botón cerrar
-        this.cancelar();
-
-        // navegar después de cerrar el modal
-        this.router.navigate(['/usuario/vacantes']);
-      } catch (error) {
-        console.error('Error al crear la solicitud: ', error);
-        alert('Error al crear la solicitud. Intentelo de nuevo mas tarde')
-      }
+      this.solicitudService.agregarSolicitud(nuevaSolicitud).subscribe({
+        next: () => {
+          console.log('Solicitud realizada: ', nuevaSolicitud);
+          alert('Solicitud creada correctamente');
+          this.cancelar();
+          this.router.navigate(['/usuario/vacantes']);
+        },
+        error: (error) => {
+          console.error('Error al crear la solicitud: ', error);
+          alert('Error al crear la solicitud. Inténtelo de nuevo más tarde');
+        }
+      });
     } else {
       console.log('Formulario no válido', this.postularForm.errors);
       alert('Formulario no válido. Por favor, revise todos los campos')
@@ -107,7 +105,7 @@ export class PostularFormComponent {
   // funcion generica para poder hacer el control del formulario
   checkControl(formControlName: string, validator: string): boolean | undefined {
     return (this.postularForm.get(formControlName)?.hasError(validator) &&
-    this.postularForm.get(formControlName)?.touched)
+      this.postularForm.get(formControlName)?.touched)
   }
 
 }

@@ -9,7 +9,7 @@
   <!-- listado de solicitudes -->
   @if (solicitudes.length > 0) {
   <div class="row">
-    @for (solicitud of solicitudes; track solicitud.id_solicitud) {
+    @for (solicitud of solicitudes; track solicitud.idSolicitud) {
     <div class="col-lg-6 mb-4 mx-auto">
       <div class="card shadow-sm h-100">
         <div class="card-body px-4">
@@ -44,9 +44,9 @@
             }
           </div>
           <div class="card-footer bg-white text-center border-0">
-            <a [routerLink]="['/usuario/vacante', solicitud.id_Vacante]"
+            <a [routerLink]="['/usuario/vacante', solicitud.idVacante]"
               class="btn btn-warning my-3 mx-2"><small>Vacante asociada</small></a>
-            <button (click)="anularSolicitud(solicitud.id_solicitud)" class="btn btn-danger mx-2">
+            <button (click)="anularSolicitud(solicitud.idSolicitud)" class="btn btn-danger mx-2">
               <small>Anular solicitud</small>
             </button>
           </div>

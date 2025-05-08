@@ -14,7 +14,7 @@
     </div>
 
     <div class="card-body">
-      <!-- Detalles de la vacante -->
+      <!-- detalles de la vacante -->
       @if (vacante) {
       <div class="mb-4 p-3 border-bottom">
         <h3 class="title-green">{{ vacante.nombre }}</h3>
@@ -43,7 +43,7 @@
       </div>
       }
 
-      <!-- Lista de solicitudes -->
+      <!-- lista de solicitudes -->
       @if (solicitudes.length > 0) {
       <div class="table-responsive">
         <table class="table table-hover">
@@ -57,7 +57,7 @@
             </tr>
           </thead>
           <tbody>
-            @for (solicitud of solicitudes; track solicitud.id_solicitud) {
+            @for (solicitud of solicitudes; track solicitud.idSolicitud) {
             <tr>
               <td>
                 <div class="d-flex align-items-center">
@@ -85,14 +85,14 @@
                     <i class="bi bi-download">CV</i>
                   </button>
 
-                  <!-- Botón para adjudicar la vacante si no está adjudicada -->
+                  <!-- boton para adjudicar la vacante si no esta adjudicada -->
                   @if (vacante?.estatus === 'CREADA' && solicitud.estado === 0) {
                   <button class="btn btn-sm btn-success ms-1" (click)="actualizarEstadoSolicitud(solicitud, 1)">
                     <i class="bi bi-check-circle"> Adjudicar</i>
                   </button>
                   }
 
-                  <!-- Si ya está adjudicada a este candidato -->
+                  <!-- si ya esta adjudicada a este candidato -->
                   @if (solicitud.estado === 1) {
                   <button class="btn btn-sm btn-outline-success ms-1" disabled>
                     <i class="bi bi-check-circle-fill">Adjudicada</i>
