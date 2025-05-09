@@ -8,6 +8,7 @@ import { Categoria } from '../../../interfaces/categoria';
 import { Vacante } from '../../../interfaces/vacante';
 import { catchError, finalize, forkJoin, of } from 'rxjs';
 import { CategoriasService } from '../../../services/categorias.service';
+import { EmpresasService } from '../../../services/empresas.service';
 
 @Component({
   selector: 'app-editar-vacante',
@@ -25,25 +26,28 @@ export class EditarVacanteComponent implements OnInit {
   guardando: boolean = false;
   error: string | null = null;
   fecha: Date = new Date();
+  cargandoEmpresa = false;
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private vacantesService: VacantesService,
-    private categoriaService: CategoriasService
-  ) {}
+    private categoriaService: CategoriasService,
+    private eService: EmpresasService
+  ) { }
 
   ngOnInit(): void {
     // Inicializar el formulario vacío
     this.initForm();
-    
-    // Obtener el ID de la empresa del localStorage
+
+    /*// Obtener el ID de la empresa del localStorage
     const empresaGuardada = localStorage.getItem('empresa');
     if (empresaGuardada) {
       const empresa = JSON.parse(empresaGuardada);
       this.idEmpresa = empresa.id_empresa;
-    }
+    }*/
+    this.obtenerEmpresaDesdeEmail();
 
     // Obtener el ID de la vacante de los parámetros de la ruta
     this.route.params.subscribe(params => {
@@ -55,6 +59,29 @@ export class EditarVacanteComponent implements OnInit {
         this.cargando = false;
       }
     });
+  }
+
+  obtenerEmpresaDesdeEmail(): void {
+    const usuarioGuardado = localStorage.getItem('usuario');
+    if (usuarioGuardado) {
+      const usuario = JSON.parse(usuarioGuardado);
+      const email = usuario.email;
+
+      if (email) {
+        this.cargandoEmpresa = true;
+        this.eService.getEmpresaPorUsuario(email).subscribe({
+          next: (empresa) => {
+            this.idEmpresa = empresa.id_empresa;
+            this.cargandoEmpresa = false;
+          },
+          error: (err) => {
+            console.error('Error al obtener la empresa por email', err);
+            this.error = 'No se pudo obtener la información de la empresa.';
+            this.cargandoEmpresa = false;
+          }
+        });
+      }
+    }
   }
 
   private initForm(): void {
@@ -106,7 +133,7 @@ export class EditarVacanteComponent implements OnInit {
 
         // Actualizar fecha de la vista previa
         this.fecha = new Date(vacante.fecha);
-        
+
         // Actualizar el formulario con los datos de la vacante
         this.vacanteForm.patchValue({
           idVacante: vacante.idVacante,
@@ -142,7 +169,7 @@ export class EditarVacanteComponent implements OnInit {
 
     this.guardando = true;
     const vacante: Vacante = this.vacanteForm.value;
-    
+
     // Aseguramos que la fecha sea la original si no se modificó
     if (!vacante.fecha) {
       vacante.fecha = this.fecha;
