@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Usuario } from '../../../interfaces/usuario';
 import { UsuariosService } from '../../../services/usuarios.service';
 import { FormsModule } from '@angular/forms';
@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './lista-usuarios.component.html',
   styleUrl: './lista-usuarios.component.css'
 })
-export class ListaUsuariosComponent {
+export class ListaUsuariosComponent implements OnInit, OnDestroy  {
 
 
   usuarios: Usuario[] = [];
@@ -28,8 +28,13 @@ constructor(
 ) {}
 
 ngOnInit(): void{
-  this.subscriptions.unsubscribe();
+  this.cargarUsuarios();
 }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
 
 cargarUsuarios(): void {
   const sub = this.uService.getAllUsuarios().subscribe({
