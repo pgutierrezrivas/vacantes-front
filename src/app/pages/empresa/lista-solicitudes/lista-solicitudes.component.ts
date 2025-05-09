@@ -36,6 +36,9 @@ export class ListaSolicitudesComponent implements OnInit {
     // obtenemos el id de la vacante desde la url
     this.route.params.subscribe(params => {
       console.log('Parámetros de ruta recibidos:', params);
+
+      
+
      // Verificar si existe el parámetro 'id'
     if (!params['id']) {
       this.error = 'No se ha proporcionado un ID de vacante';
@@ -53,7 +56,8 @@ export class ListaSolicitudesComponent implements OnInit {
     // Convertir el parámetro a número y verificar que sea válido
     const id = Number(params['id']);
     
-    if (isNaN(id)) {
+     if (!isNaN(id)) {
+    this.vacanteId = id;
       this.error = 'El ID de vacante proporcionado no es válido';
       console.error('ID de vacante inválido (NaN):', params['id']);
       return;
