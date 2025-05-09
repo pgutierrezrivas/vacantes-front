@@ -15,11 +15,12 @@ export class UsuariosService {
   constructor() { }
 
   getAllUsuarios(): Observable<Usuario[]> {
-    return this.http.get<Usuario[]>(this.apiUrl).pipe(
+    return this.http.get<Usuario[]>(`${this.apiUrl}/todos`).pipe(
       map(users => {
         return users.map(user => ({
           ...user,
-          fecha_Registro: new Date(user.fecha_Registro),
+          // Safe date parsing with error handling
+          fecha_Registro: this.parsearDatosDeManeraSegura(user.fecha_Registro),
           enabled: user.enabled ? 1 : 0, // (1 true, 0 false)
         }));
       }),
@@ -29,6 +30,24 @@ export class UsuariosService {
       })
     );
   }
+
+  private parsearDatosDeManeraSegura(dateStr: any): Date {
+    if (!dateStr) return new Date(); // Default to today if no date
+    
+    try {
+      const parsed = new Date(dateStr);
+      // Check if the date is valid
+      if (isNaN(parsed.getTime())) {
+        console.warn(`Invalid date format: ${dateStr}, using current date`);
+        return new Date();
+      }
+      return parsed;
+    } catch (e) {
+      console.warn(`Error parsing date: ${dateStr}, using current date`, e);
+      return new Date();
+    }
+  }
+
 
   // metodo para obtener usuario por id
   getUsuarioById(id: string): Observable<Usuario | undefined> {
