@@ -1,6 +1,6 @@
 <section>
     <div class="container">
-    <h2 class="text-center fw-semibold mb-4 title-green">Ofertas de empleo</h2>
+        <h2 class="text-center fw-semibold mb-4 title-green">Ofertas de empleo</h2>
 
         <!-- filtros -->
         <div class="card shadow-sm mb-4">
@@ -11,20 +11,20 @@
                             <span class="input-group-text">
                                 <i class="bi bi-search"></i>
                             </span>
-                            <input type="text" class="form-control" placeholder="Buscar por nombre o descripción..." 
-                            [(ngModel)]="filtroNombre">
+                            <input type="text" class="form-control" placeholder="Buscar por nombre o descripción..."
+                                [(ngModel)]="filtroNombre" (ngModelChange)="aplicarFiltros()">
                         </div>
                     </div>
-    
+
                     <div class="col-md-3 mb-2">
-                        <select class="form-select" [(ngModel)]="filtroFecha">
+                        <select class="form-select" [(ngModel)]="filtroFecha" (ngModelChange)="aplicarFiltros()">
                             <option value="">Todas las fechas</option>
                             <option value="reciente">Más recientes</option>
                             <option value="antigua">Más antiguas</option>
                         </select>
                     </div>
                     <div class="col-md-3 mb-2">
-                        <select class="form-select" [(ngModel)]="filtroSalario">
+                        <select class="form-select" [(ngModel)]="filtroSalario" (ngModelChange)="aplicarFiltros()">
                             <option value="">Todos los salarios</option>
                             <option value="mayor">Mayor salario</option>
                             <option value="menor">Menor salario</option>
@@ -35,40 +35,42 @@
         </div>
 
         <div class="row row-cols-1 row-cols-md-3 g-4">
-        @for (vacante of vacanteFiltrada; track vacante.id_vacante) {
+            @for (vacante of vacantesFiltradas; track vacante.idVacante) {
             <div class="col">
-            <div class="card cardMove h-100 d-flex flex-column shadow-sm">
-                <img [src]="vacante.imagen" class="card-img-top" alt="{{vacante.nombre}}"style="height: 200px; object-fit: cover;">
-                <div class="card-body flex-grow-1">
-                <h5 class="card-title fw-semibold">{{vacante.nombre}}</h5>
-                <p class="card-text">{{vacante.descripcion}}</p>
-                
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <span class="fw-semibold">
-                    {{vacante.salario.toLocaleString()}} €/año
-                </span>
-                @if(vacante.destacado) {
-                    <span class="badge bg-success fw-medium">Destacado</span>
-                }
-                </div>
-                
-                <div class="d-flex justify-content-between align-items-center">
-                    <small class="text-muted">
-                    <i class="bi bi-calendar-event me-1"></i>
-                    {{vacante.fecha | date : "dd/MM/yyyy"}}
-                </small>
-                <a [routerLink]="['/usuario/vacante', vacante.id_vacante]" class="btn btn-warning btn-sm">Ver más</a>
+                <div class="card cardMove h-100 d-flex flex-column shadow-sm">
+                    <img [src]="vacante.imagen" class="card-img-top" alt="{{vacante.nombre}}"
+                        style="height: 200px; object-fit: cover;">
+                    <div class="card-body flex-grow-1">
+                        <h5 class="card-title fw-semibold">{{vacante.nombre}}</h5>
+                        <p class="card-text">{{vacante.descripcion}}</p>
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="fw-semibold">
+                                {{vacante.salario.toLocaleString()}} €/año
+                            </span>
+                            @if(vacante.destacado) {
+                            <span class="badge bg-success fw-medium">Destacado</span>
+                            }
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                <i class="bi bi-calendar-event me-1"></i>
+                                {{vacante.fecha | date : "dd/MM/yyyy"}}
+                            </small>
+                            <a [routerLink]="['/usuario/vacante', vacante.idVacante]" class="btn btn-warning btn-sm">Ver
+                                más</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            </div>
+            }
+        </div>
+
+        @if(vacantesFiltradas.length === 0) {
+        <div class="alert alert-secondary text-center mt-4" role="alert">
+            No hay vacantes disponibles en este momento.
         </div>
         }
-    </div>
-    
-    @if(vacanteFiltrada.length === 0) {
-    <div class="alert alert-secondary text-center mt-4" role="alert">
-        No hay vacantes disponibles en este momento.
-        </div>
-    }
     </div>
 </section>

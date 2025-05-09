@@ -17,7 +17,9 @@ import { Subscription } from 'rxjs';
 export class ListaEmpresasComponent implements OnInit {
   empresas: Empresa[] = [];
   empresasFiltradas: Empresa[] = [];
+
   filtroTexto: string = '';
+
   private subscriptions: Subscription = new Subscription();
 
   constructor(

@@ -40,7 +40,7 @@
     <!-- listado de vacantes -->
     @if (vacantesFiltradas.length > 0) {
     <div class="row">
-        @for (vacante of vacantesFiltradas; track vacante.id_vacante) {
+        @for (vacante of vacantesFiltradas; track vacante.idVacante) {
         <div class="col-lg-6 mb-4">
             <div class="card shadow-sm h-100">
                 <div class="card-header d-flex justify-content-between align-items-center" [ngClass]="{
@@ -90,15 +90,15 @@
                         </div>
                         <div class="btn-group">
                             <button class="btn btn-sm btn-info text-white"
-                                [routerLink]="['/empresa/vacante/solicitudes', vacante.id_vacante]">
+                                [routerLink]="['/empresa/vacante/solicitudes', vacante.idVacante]">
                                 <i class="bi bi-people-fill me-1"></i> Solicitudes
                             </button>
                             <button class="btn btn-sm btn-warning"
-                                [routerLink]="['/empresa/vacante/editar', vacante.id_vacante]">
+                                [routerLink]="['/empresa/vacante/editar', vacante.idVacante]">
                                 <i class="bi bi-pencil-fill me-1"></i> Editar
                             </button>
                             <button class="btn btn-sm btn-danger"
-                                (click)="eliminarVacante(vacante.id_vacante, vacante.nombre)">
+                                (click)="eliminarVacante(vacante.idVacante, vacante.nombre)">
                                 <i class="bi bi-trash-fill me-1"></i> Eliminar
                             </button>
                         </div>

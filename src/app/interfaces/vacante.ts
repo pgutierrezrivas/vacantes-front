@@ -1,7 +1,7 @@
 export type VacanteStatus = 'CREADA' | 'CUBIERTA' | 'CANCELADA';
 
 export interface Vacante {
-    id_vacante: number;
+    idVacante: number;
     nombre: string;
     descripcion: string;
     fecha: Date;
