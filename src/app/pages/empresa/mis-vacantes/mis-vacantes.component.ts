@@ -8,6 +8,7 @@ import { catchError, finalize, of } from 'rxjs';
 
 @Component({
   selector: 'app-mis-vacantes',
+  standalone: true, // Añadido para ser consistente con EditarVacanteComponent
   imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './mis-vacantes.component.html',
   styleUrl: './mis-vacantes.component.css'
@@ -24,42 +25,42 @@ export class MisVacantesComponent implements OnInit {
   constructor(private vService: VacantesService) { }
 
   ngOnInit(): void {
-    //Obtener el id de la empresa del localStoraGE
+    // Obtener el id de la empresa del localStorage
     const empresaGuardada = localStorage.getItem('empresa');
     if (empresaGuardada) {
       const empresa = JSON.parse(empresaGuardada);
-      this.idEmpresa = empresa.id_empresa;
       this.cargarVacantes();
+    } else {
+      this.error = 'No se encontró información de la empresa. Por favor, inicie sesión nuevamente.';
     }
   }
 
   cargarVacantes(): void {
-    //obtener todas las vcacantes de la empresa
     this.cargando = true;
-    //Obtener todas las vacantes de la empresa
     this.vService.getVacantesByEmpresa(this.idEmpresa)
       .pipe(
         catchError(error => {
           console.error('Error al cargar vacantes: ', error);
-          this.error = 'No se puedieronc argar las vacantes. Por favor, intentelo de nuevo'
+          this.error = 'No se pudieron cargar las vacantes. Por favor, inténtelo de nuevo';
           return of([]);
         }),
         finalize(() => this.cargando = false)
       )
       .subscribe(vacantes => {
-        this.misVacantes = this.vacantesFiltradas;
+        // Corregido: asignar las vacantes recibidas a misVacantes
+        this.misVacantes = vacantes;
         this.aplicarFiltros();
-      })
+      });
   }
 
   aplicarFiltros(): void {
     this.vacantesFiltradas = this.misVacantes.filter(vacante => {
-      //filtrar por estatus
+      // Filtrar por estatus
       const cumpleFiltroEstatus = this.filtroEstatus === 'TODAS' || vacante.estatus === this.filtroEstatus;
-      //filtrar por texto de busqueda
+      // Filtrar por texto de búsqueda
       const cumpleFiltroTexto = this.filtroBusqueda === '' || 
-     vacante.nombre.toLowerCase().includes(this.filtroBusqueda.toLowerCase()) || 
-       vacante.descripcion.toLowerCase().includes(this.filtroBusqueda.toLowerCase());
+        vacante.nombre.toLowerCase().includes(this.filtroBusqueda.toLowerCase()) || 
+        vacante.descripcion.toLowerCase().includes(this.filtroBusqueda.toLowerCase());
       
       return cumpleFiltroEstatus && cumpleFiltroTexto;
     });
@@ -85,13 +86,13 @@ export class MisVacantesComponent implements OnInit {
   }
 
   eliminarVacante(idVacante: number, nombreVacante: string): void {
-    if (confirm(`¿Esta seguro que desea eliminar la vacante "${nombreVacante}"?`)) {
+    if (confirm(`¿Está seguro que desea eliminar la vacante "${nombreVacante}"?`)) {
       this.cargando = true;
       this.vService.eliminarVacante(idVacante)
         .pipe(
           catchError(error => {
             console.error('Error al eliminar la vacante', error);
-            alert('Error al eliminar la vacante. Intentelo de nuevo mas tarde');
+            alert('Error al eliminar la vacante. Inténtelo de nuevo más tarde');
             return of(0);
           }),
           finalize(() => this.cargando = false)
@@ -99,9 +100,9 @@ export class MisVacantesComponent implements OnInit {
         .subscribe(result => {
           if (result === 1) {
             this.cargarVacantes();
-            alert(`Vacante "${nombreVacante}" eliminada correctamente`)
+            alert(`Vacante "${nombreVacante}" eliminada correctamente`);
           }
-        })
+        });
     }
   }
 }

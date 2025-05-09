@@ -7,178 +7,169 @@
     </div>
 
     @if (cargando) {
-        <div class="text-center py-5">
-            <div class="spinner-border text-warning" role="status">
-                <span class="visually-hidden">Cargando...</span>
-            </div>
-            <p class="mt-2">Cargando información...</p>
+    <div class="d-flex justify-content-center my-5">
+        <div class="spinner-border text-warning" role="status">
+            <span class="visually-hidden">Cargando...</span>
         </div>
+    </div>
     } @else if (error) {
-        <div class="alert alert-danger">
-            {{ error }}
-        </div>
-    } @else if (successMessage) {
-        <div class="alert alert-success">
-            {{ successMessage }}
-        </div>
+    <div class="alert alert-danger">
+        {{ error }}
+    </div>
     } @else {
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <form [formGroup]="vacanteForm" (ngSubmit)="guardarCambios()">
-                    <div class="row mb-3">
-                        <div class="col-md-8">
-                            <div class="mb-3">
-                                <label for="nombre" class="form-label">Nombre de la vacante*</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="nombre"
-                                    formControlName="nombre"
-                                    [ngClass]="{'is-invalid': nombreInvalid}"
-                                    placeholder="Ej: Desarrollador Frontend Senior"
-                                >
-                                @if (nombreInvalid) {
-                                    <div class="invalid-feedback">
-                                        @if (vacanteForm.get('nombre')?.errors?.['required']) {
-                                            El nombre es obligatorio
-                                        } @else if (vacanteForm.get('nombre')?.errors?.['minlength']) {
-                                            El nombre debe tener al menos 3 caracteres
-                                        }
-                                    </div>
-                                }
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="descripcion" class="form-label">Descripción breve*</label>
-                                <textarea
-                                    class="form-control"
-                                    id="descripcion"
-                                    formControlName="descripcion"
-                                    [ngClass]="{'is-invalid': descripcionInvalid}"
-                                    placeholder="Breve descripción que aparecerá en el listado de vacantes"
-                                    rows="2"
-                                ></textarea>
-                                @if (descripcionInvalid) {
-                                    <div class="invalid-feedback">
-                                        @if (vacanteForm.get('descripcion')?.errors?.['required']) {
-                                            La descripción es obligatoria
-                                        } @else if (vacanteForm.get('descripcion')?.errors?.['minlength']) {
-                                            La descripción debe tener al menos 10 caracteres
-                                        }
-                                    </div>
-                                }
-                            </div>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form [formGroup]="vacanteForm" (ngSubmit)="guardarCambios()">
+                <div class="row g-3">
+                    
+                    <div class="col-md-12 mb-3">
+                        <label for="nombre" class="form-label">Nombre de la vacante *</label>
+                        <input type="text" class="form-control" id="nombre" formControlName="nombre"
+                            placeholder="Ej: Desarrollador Frontend">
+                        @if (isInvalid('nombre')) {
+                        <div class="text-danger small mt-1">
+                            El nombre de la vacante es obligatorio y debe tener al menos 3 caracteres
                         </div>
-
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="salario" class="form-label">Salario anual (€)*</label>
-                                <input
-                                    type="number"
-                                    class="form-control"
-                                    id="salario"
-                                    formControlName="salario"
-                                    [ngClass]="{'is-invalid': salarioInvalid}"
-                                    placeholder="Ej: 35000"
-                                >
-                                @if (salarioInvalid) {
-                                    <div class="invalid-feedback">
-                                        @if (vacanteForm.get('salario')?.errors?.['required']) {
-                                            El salario es obligatorio
-                                        } @else if (vacanteForm.get('salario')?.errors?.['min']) {
-                                            El salario debe ser un valor positivo
-                                        }
-                                    </div>
-                                }
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="categoria" class="form-label">Categoría*</label>
-                                <select
-                                    class="form-select"
-                                    id="categoria"
-                                    formControlName="id_Categoria"
-                                    [ngClass]="{'is-invalid': categoriaInvalid}"
-                                >
-                                    <option value="0" disabled>Selecciona una categoría</option>
-                                    @for (categoria of categorias; track categoria.id_categoria) {
-                                        <option [value]="categoria.id_categoria">{{ categoria.nombre }}</option>
-                                    }
-                                </select>
-                                @if (categoriaInvalid) {
-                                    <div class="invalid-feedback">
-                                        Debes seleccionar una categoría
-                                    </div>
-                                }
-                            </div>
-
-                            <div class="form-check mb-3">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    id="destacado"
-                                    formControlName="destacado"
-                                >
-                                <label class="form-check-label" for="destacado">
-                                    Destacar esta vacante
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="detalles" class="form-label">Detalles de la vacante*</label>
-                        <textarea
-                            class="form-control"
-                            id="detalles"
-                            formControlName="detalles"
-                            [ngClass]="{'is-invalid': detallesInvalid}"
-                            placeholder="Describe detalladamente el puesto, requisitos, responsabilidades, etc."
-                            rows="6"
-                        ></textarea>
-                        @if (detallesInvalid) {
-                            <div class="invalid-feedback">
-                                @if (vacanteForm.get('detalles')?.errors?.['required']) {
-                                    Los detalles son obligatorios
-                                } @else if (vacanteForm.get('detalles')?.errors?.['minlength']) {
-                                    Los detalles deben tener al menos 20 caracteres
-                                }
-                            </div>
                         }
                     </div>
 
-                    <div class="mb-3">
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="categoria" class="form-label">Categoría *</label>
+                        <select class="form-select" id="categoria" formControlName="id_Categoria">
+                            <option value="" disabled selected>Seleccione una categoría</option>
+                            @for (categoria of categorias; track categoria.id_categoria) {
+                            <option [value]="categoria.id_categoria">{{ categoria.nombre }}</option>
+                            }
+                        </select>
+                        @if (isInvalid('id_Categoria')) {
+                        <div class="text-danger small mt-1">
+                            Debe seleccionar una categoría
+                        </div>
+                        }
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="salario" class="form-label">Salario anual (€) *</label>
+                        <input type="number" class="form-control" id="salario" formControlName="salario"
+                            placeholder="Ej: 30000">
+                        @if (isInvalid('salario')) {
+                        <div class="text-danger small mt-1">
+                            El salario es obligatorio y debe ser un número mayor a 0
+                        </div>
+                        }
+                    </div>
+
+                  
+                    <div class="col-md-12 mb-3">
+                        <label for="descripcion" class="form-label">Descripción breve *</label>
+                        <textarea class="form-control" id="descripcion" formControlName="descripcion" rows="3"
+                            placeholder="Resumen de la posición (máx. 250 caracteres)"></textarea>
+                        @if (isInvalid('descripcion')) {
+                        <div class="text-danger small mt-1">
+                            La descripción es obligatoria y debe tener entre 10 y 250 caracteres
+                        </div>
+                        }
+                    </div>
+
+                    
+                    <div class="col-md-12 mb-3">
+                        <label for="detalles" class="form-label">Detalles completos *</label>
+                        <textarea class="form-control" id="detalles" formControlName="detalles" rows="6"
+                            placeholder="Detalle los requisitos, responsabilidades y beneficios de la posición"></textarea>
+                        @if (isInvalid('detalles')) {
+                        <div class="text-danger small mt-1">
+                            Los detalles son obligatorios y deben tener al menos 50 caracteres
+                        </div>
+                        }
+                    </div>
+
+                    
+                    <div class="col-md-12 mb-3">
                         <label for="imagen" class="form-label">URL de imagen (opcional)</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="imagen"
-                            formControlName="imagen"
-                            placeholder="URL de una imagen representativa para la vacante"
-                        >
-                        <div class="form-text">Deja en blanco para usar la imagen por defecto.</div>
+                        <input type="text" class="form-control" id="imagen" formControlName="imagen"
+                            placeholder="https://ejemplo.com/imagen.jpg">
                     </div>
 
-                    <div class="d-flex justify-content-end gap-2 mt-4">
-                        <button type="button" class="btn btn-secondary" (click)="cancelar()">
-                            <i class="bi bi-x-circle me-1"></i> Cancelar
-                        </button>
-                        <button type="submit" class="btn btn-warning" [disabled]="vacanteForm.invalid || cargando">
-                            <i class="bi bi-save me-1"></i> Guardar cambios
-                        </button>
+                   
+                    <div class="col-md-12 mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="destacado" formControlName="destacado">
+                            <label class="form-check-label" for="destacado">
+                                Destacar esta vacante (aparecerá marcada con estrella)
+                            </label>
+                        </div>
                     </div>
-                </form>
-            </div>
+
+                    
+                    <div class="col-md-12 mb-3">
+                        <label for="estatus" class="form-label">Estado de la vacante *</label>
+                        <select class="form-select" id="estatus" formControlName="estatus">
+                            <option value="CREADA">Activa</option>
+                            <option value="CUBIERTA">Cubierta</option>
+                            <option value="CANCELADA">Cancelada</option>
+                        </select>
+                    </div>
+
+                    
+                    <div class="col-12 d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" [routerLink]="['/empresa/vacantes']">
+                            <i class="bi bi-arrow-left me-1"></i> Volver
+                        </button>
+                        <div>
+                            <button type="button" class="btn btn-danger me-2" (click)="confirmarEliminar()">
+                                <i class="bi bi-trash-fill me-1"></i> Eliminar
+                            </button>
+                            <button type="submit" class="btn btn-warning" [disabled]="vacanteForm.invalid || guardando">
+                                <i class="bi bi-save me-1"></i> Guardar cambios
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
+    </div>
+    }
 
-        <div class="alert alert-info mt-4">
-            <div class="d-flex align-items-center">
-                <i class="bi bi-info-circle-fill me-2 fs-4"></i>
-                <div>
-                    <strong>Importante:</strong> Todos los campos marcados con * son obligatorios.
-                    <br>Una vez actualizada, podrás ver los cambios en el listado de vacantes.
+    <!-- Vista previa -->
+    @if (!cargando && !error && vacanteForm.valid) {
+    <div class="mt-4">
+        <h4 class="mb-3">Vista previa</h4>
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center" [ngClass]="{
+                'bg-success text-white': vacanteForm.value.estatus === 'CREADA',
+                'bg-primary text-white': vacanteForm.value.estatus === 'CUBIERTA',
+                'bg-secondary text-white': vacanteForm.value.estatus === 'CANCELADA'
+            }">
+                <h5 class="card-title mb-0">
+                    @if (vacanteForm.value.destacado) {
+                    <i class="bi bi-star-fill text-warning me-2"></i>
+                    }
+                    {{ vacanteForm.value.nombre }}
+                </h5>
+                <span class="badge bg-light text-dark">
+                    {{ vacanteForm.value.estatus }}
+                </span>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img [src]="vacanteForm.value.imagen || 'images/vacantes/default.jpg'" class="img-fluid rounded mb-3"
+                            alt="Imagen de la vacante">
+                    </div>
+                    <div class="col-md-8">
+                        <p class="card-text">{{ vacanteForm.value.descripcion }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span><strong>Salario:</strong> {{ vacanteForm.value.salario | currency:'EUR':'symbol':'1.0-0' }}</span>
+                            <span><strong>Fecha:</strong> {{ fecha | date:'dd/MM/yyyy' }}</span>
+                        </div>
+                        <hr>
+                        <h6 class="fw-bold">Detalles de la vacante:</h6>
+                        <p class="card-text">{{ vacanteForm.value.detalles }}</p>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
     }
 </div>
