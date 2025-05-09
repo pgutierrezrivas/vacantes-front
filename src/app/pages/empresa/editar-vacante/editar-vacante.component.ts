@@ -40,13 +40,7 @@ export class EditarVacanteComponent implements OnInit {
   ngOnInit(): void {
     // Inicializar el formulario vacío
     this.initForm();
-
-    /*// Obtener el ID de la empresa del localStorage
-    const empresaGuardada = localStorage.getItem('empresa');
-    if (empresaGuardada) {
-      const empresa = JSON.parse(empresaGuardada);
-      this.idEmpresa = empresa.id_empresa;
-    }*/
+    // obtener empresa
     this.obtenerEmpresaDesdeEmail();
 
     // Obtener el ID de la vacante de los parámetros de la ruta
