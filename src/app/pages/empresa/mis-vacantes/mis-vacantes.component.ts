@@ -9,6 +9,7 @@ import { EmpresasService } from '../../../services/empresas.service';
 
 @Component({
   selector: 'app-mis-vacantes',
+  standalone: true, // Añadido para ser consistente con EditarVacanteComponent
   imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './mis-vacantes.component.html',
   styleUrl: './mis-vacantes.component.css'
@@ -72,11 +73,13 @@ export class MisVacantesComponent implements OnInit {
 
   aplicarFiltros(): void {
     this.vacantesFiltradas = this.misVacantes.filter(vacante => {
+      // Filtrar por estatus
       const cumpleFiltroEstatus = this.filtroEstatus === 'TODAS' || vacante.estatus === this.filtroEstatus;
-      const cumpleFiltroTexto = this.filtroBusqueda === '' ||
-        vacante.nombre.toLowerCase().includes(this.filtroBusqueda.toLowerCase()) ||
+      // Filtrar por texto de búsqueda
+      const cumpleFiltroTexto = this.filtroBusqueda === '' || 
+        vacante.nombre.toLowerCase().includes(this.filtroBusqueda.toLowerCase()) || 
         vacante.descripcion.toLowerCase().includes(this.filtroBusqueda.toLowerCase());
-
+      
       return cumpleFiltroEstatus && cumpleFiltroTexto;
     });
   }
