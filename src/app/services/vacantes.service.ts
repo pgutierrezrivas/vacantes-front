@@ -22,10 +22,8 @@ export class VacantesService {
     return this.http.get<Vacante>(`${this.apiUrl}/uno/${id}`);
   }
 
-  getVacantesByEmpresa(empresaId: number): Observable<Vacante[]> {
-    // mirar si existe este endpoint en el back
-    // Si no existe, se debe implementar en VacanteController
-    return this.http.get<Vacante[]>(`${this.apiUrl}/empresa/${empresaId}`);
+  getVacantesByEmpresa(idEmpresa: number): Observable<Vacante[]> {
+    return this.http.get<Vacante[]>(`${this.apiUrl}/empresa/${idEmpresa}`);
   }
 
   crearVacante(vacante: Vacante): Observable<Vacante> {

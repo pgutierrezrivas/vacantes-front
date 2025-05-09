@@ -5,6 +5,7 @@ import { VacantesService } from '../../../services/vacantes.service';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { catchError, finalize, of } from 'rxjs';
+import { EmpresasService } from '../../../services/empresas.service';
 
 @Component({
   selector: 'app-mis-vacantes',
@@ -18,47 +19,60 @@ export class MisVacantesComponent implements OnInit {
   idEmpresa: number = 0;
   filtroEstatus: string = 'TODAS';
   filtroBusqueda: string = '';
-  cargando: boolean = false;
+  cargandoVacantes: boolean = false;
+  cargandoEmpresa = false;
   error: string | null = null;
 
-
-  constructor(private vService: VacantesService) { }
+  constructor(private vService: VacantesService, private eService: EmpresasService) { }
 
   ngOnInit(): void {
-    //Obtener el id de la empresa del localStoraGE
-    const empresaGuardada = localStorage.getItem('empresa');
-    if (empresaGuardada) {
-      const empresa = JSON.parse(empresaGuardada);
-      this.idEmpresa = empresa.id_empresa;
-      this.cargarVacantes();
+    this.obtenerEmpresaDesdeEmail();
+  }
+
+  obtenerEmpresaDesdeEmail(): void {
+    const usuarioGuardado = localStorage.getItem('usuario');
+    if (usuarioGuardado) {
+      const usuario = JSON.parse(usuarioGuardado);
+      const email = usuario.email;
+
+      if (email) {
+        this.cargandoEmpresa = true;
+        this.eService.getEmpresaPorUsuario(email).subscribe({
+          next: (empresa) => {
+            this.idEmpresa = empresa.id_empresa;
+            this.cargandoEmpresa = false;
+            this.cargarVacantes();
+          },
+          error: (err) => {
+            console.error('Error al obtener la empresa por email', err);
+            this.error = 'No se pudo obtener la información de la empresa.';
+            this.cargandoEmpresa = false;
+          }
+        });
+      }
     }
   }
 
   cargarVacantes(): void {
-    //obtener todas las vcacantes de la empresa
-    this.cargando = true;
-    //Obtener todas las vacantes de la empresa
+    this.cargandoVacantes = true;
     this.vService.getVacantesByEmpresa(this.idEmpresa)
       .pipe(
         catchError(error => {
           console.error('Error al cargar vacantes: ', error);
-          this.error = 'No se puedieronc argar las vacantes. Por favor, intentelo de nuevo'
+          this.error = 'No se pudieron cargar las vacantes. Por favor, inténtelo de nuevo.';
           return of([]);
         }),
-        finalize(() => this.cargando = false)
+        finalize(() => this.cargandoVacantes = false)
       )
       .subscribe(vacantes => {
-        this.misVacantes = this.vacantesFiltradas;
+        this.misVacantes = vacantes;
         this.aplicarFiltros();
-      })
+      });
   }
 
   aplicarFiltros(): void {
     this.vacantesFiltradas = this.misVacantes.filter(vacante => {
-      //filtrar por estatus
       const cumpleFiltroEstatus = this.filtroEstatus === 'TODAS' || vacante.estatus === this.filtroEstatus;
-
-      //filtrar por texto de busqueda
       const cumpleFiltroTexto = this.filtroBusqueda === '' ||
         vacante.nombre.toLowerCase().includes(this.filtroBusqueda.toLowerCase()) ||
         vacante.descripcion.toLowerCase().includes(this.filtroBusqueda.toLowerCase());
@@ -68,7 +82,7 @@ export class MisVacantesComponent implements OnInit {
   }
 
   cambiarEstadoVacante(vacante: Vacante, nuevoEstado: 'CREADA' | 'CUBIERTA' | 'CANCELADA'): void {
-    this.cargando = true;
+    this.cargandoVacantes = true;
     this.vService.actualizarVacante(vacante, nuevoEstado)
       .pipe(
         catchError(error => {
@@ -76,35 +90,34 @@ export class MisVacantesComponent implements OnInit {
           alert('Error al actualizar el estado de la vacante. Inténtelo de nuevo más tarde.');
           return of(null);
         }),
-        finalize(() => this.cargando = false)
+        finalize(() => this.cargandoVacantes = false)
       )
       .subscribe(result => {
         if (result) {
-          this.cargarVacantes(); // Recargar vacantes para mostrar los cambios
+          this.cargarVacantes();
           alert(`Estado de la vacante "${vacante.nombre}" actualizado a ${nuevoEstado}`);
         }
       });
   }
 
   eliminarVacante(idVacante: number, nombreVacante: string): void {
-    if (confirm(`¿Esta seguro que desea eliminar la vacante "${nombreVacante}"?`)) {
-      this.cargando = true;
+    if (confirm(`¿Está seguro que desea eliminar la vacante "${nombreVacante}"?`)) {
+      this.cargandoVacantes = true;
       this.vService.eliminarVacante(idVacante)
         .pipe(
           catchError(error => {
             console.error('Error al eliminar la vacante', error);
-            alert('Error al eliminar la vacante. Intentelo de nuevo mas tarde');
+            alert('Error al eliminar la vacante. Inténtelo de nuevo más tarde.');
             return of(0);
           }),
-          finalize(() => this.cargando = false)
+          finalize(() => this.cargandoVacantes = false)
         )
         .subscribe(result => {
           if (result === 1) {
             this.cargarVacantes();
-            alert(`Vacante "${nombreVacante}" eliminada correctamente`)
+            alert(`Vacante "${nombreVacante}" eliminada correctamente`);
           }
-        })
+        });
     }
   }
-
 }
