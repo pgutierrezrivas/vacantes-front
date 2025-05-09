@@ -16,13 +16,16 @@ export class AuthService {
   private _usuario = new BehaviorSubject<Usuario | null>(null);
   usuario$ = this._usuario.asObservable();
 
-  private apiUrl = `${environment.apiUrl}/auth`;
-
-  // almacenamos la contraseña en memoria
   private _password: string | null = null;
+
+  private apiUrl = `${environment.apiUrl}/auth`;
 
   constructor() {
     this.loadUserFromLocalStorage();
+    const storedPassword = sessionStorage.getItem('password');
+    if (storedPassword) {
+      this._password = storedPassword;
+    }
   }
 
   private loadUserFromLocalStorage(): void {
@@ -68,7 +71,9 @@ export class AuthService {
       fecha_Registro: new Date(),
       rol: null
     });
+
     this._password = password;
+    sessionStorage.setItem('password', password);
 
     return this.http.get(`${this.apiUrl}/login`, {
       observe: 'response',
@@ -102,7 +107,8 @@ export class AuthService {
   logout(): void {
     this._usuario.next(null);
     this._password = null;
-    localStorage.removeItem('usuario');
+    localStorage.removeItem('usuario'); // eliminamos el usuario guardado para mayor seguridad al hacer logout
+    sessionStorage.removeItem('password'); // lo mismo para la password
     this.router.navigate(['/login']);
   }
 
