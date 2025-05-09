@@ -21,7 +21,6 @@ export class MisVacantesComponent implements OnInit {
   cargando: boolean = false;
   error: string | null = null;
 
-
   constructor(private vService: VacantesService) { }
 
   ngOnInit(): void {
@@ -57,12 +56,11 @@ export class MisVacantesComponent implements OnInit {
     this.vacantesFiltradas = this.misVacantes.filter(vacante => {
       //filtrar por estatus
       const cumpleFiltroEstatus = this.filtroEstatus === 'TODAS' || vacante.estatus === this.filtroEstatus;
-
       //filtrar por texto de busqueda
-      const cumpleFiltroTexto = this.filtroBusqueda === '' ||
-        vacante.nombre.toLowerCase().includes(this.filtroBusqueda.toLowerCase()) ||
-        vacante.descripcion.toLowerCase().includes(this.filtroBusqueda.toLowerCase());
-
+      const cumpleFiltroTexto = this.filtroBusqueda === '' || 
+     vacante.nombre.toLowerCase().includes(this.filtroBusqueda.toLowerCase()) || 
+       vacante.descripcion.toLowerCase().includes(this.filtroBusqueda.toLowerCase());
+      
       return cumpleFiltroEstatus && cumpleFiltroTexto;
     });
   }
@@ -106,5 +104,4 @@ export class MisVacantesComponent implements OnInit {
         })
     }
   }
-
 }

@@ -1,1 +1,136 @@
-<p>editar-empresa works!</p>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header bg-white py-3">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h5 class="card-title mb-0 fw-bold">Editar Empresa</h5>
+                        </div>
+                        <div class="col-auto">
+                            <a [routerLink]="['/admin/empresas']" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Volver
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if (cargando) {
+                        <div class="d-flex justify-content-center my-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                        </div>
+                    } @else {
+                        <form [formGroup]="empresaForm" (ngSubmit)="onSubmit()">
+                            <h6 class="fw-bold mb-3">Datos de la Empresa</h6>
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="nombre_empresa" class="form-label">Nombre de la Empresa *</label>
+                                        <input type="text" class="form-control" id="nombre_empresa" 
+                                            formControlName="nombre_empresa" placeholder="Nombre de la empresa">
+                                        @if (subido && controlesTest['nombre_empresa'].errors) {
+                                            <div class="text-danger small mt-1">
+                                                @if (controlesTest['nombre_empresa'].errors['required']) {
+                                                    <span>El nombre de la empresa es obligatorio</span>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="cif" class="form-label">CIF *</label>
+                                        <input type="text" class="form-control" id="cif" 
+                                            formControlName="cif" placeholder="CIF de la empresa">
+                                        @if (subido && controlesTest['cif'].errors) {
+                                            <div class="text-danger small mt-1">
+                                                @if (controlesTest['cif'].errors['required']) {
+                                                    <span>El CIF es obligatorio</span>
+                                                }
+                                                @if (controlesTest['cif'].errors['pattern']) {
+                                                    <span>El formato del CIF no es válido</span>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email *</label>
+                                        <input type="email" class="form-control" id="email" 
+                                            formControlName="email" placeholder="Email de contacto">
+                                        @if (subido && controlesTest['email'].errors) {
+                                            <div class="text-danger small mt-1">
+                                                @if (controlesTest['email'].errors['required']) {
+                                                    <span>El email es obligatorio</span>
+                                                }
+                                                @if (controlesTest['email'].errors['email']) {
+                                                    <span>El formato del email no es válido</span>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="pais" class="form-label">País *</label>
+                                        <select class="form-select" id="pais" formControlName="pais">
+                                            <option value="" disabled>Selecciona un país</option>
+                                            @for (pais of paises; track pais) {
+                                                <option [value]="pais">{{pais}}</option>
+                                            }
+                                        </select>
+                                        @if (subido && controlesTest['pais'].errors) {
+                                            <div class="text-danger small mt-1">
+                                                @if (controlesTest['pais'].errors['required']) {
+                                                    <span>El país es obligatorio</span>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label for="direccion_fiscal" class="form-label">Dirección Fiscal *</label>
+                                        <textarea class="form-control" id="direccion_fiscal" 
+                                            formControlName="direccion_fiscal" rows="3" 
+                                            placeholder="Dirección fiscal completa"></textarea>
+                                        @if (subido && controlesTest['direccion_fiscal'].errors) {
+                                            <div class="text-danger small mt-1">
+                                                @if (controlesTest['direccion_fiscal'].errors['required']) {
+                                                    <span>La dirección fiscal es obligatoria</span>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end mt-4">
+                                <button type="button" class="btn btn-outline-secondary me-2" 
+                                    [routerLink]="['/admin/empresas']">Cancelar</button>
+                                <button type="submit" class="btn btn-primary" 
+                                    [disabled]="cargando">
+                                    @if (cargando) {
+                                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        Guardando...
+                                    } @else {
+                                        Guardar Cambios
+                                    }
+                                </button>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

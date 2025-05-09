@@ -1,1 +1,184 @@
-<p>editar-vacante works!</p>
+<div class="container">
+    <div class="row mb-4 text-center">
+        <div class="col-12">
+            <h2 class="fw-semibold title-green">Editar Vacante</h2>
+            <p class="text-muted">Actualiza la información de tu oferta de empleo</p>
+        </div>
+    </div>
+
+    @if (cargando) {
+        <div class="text-center py-5">
+            <div class="spinner-border text-warning" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-2">Cargando información...</p>
+        </div>
+    } @else if (error) {
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+    } @else if (successMessage) {
+        <div class="alert alert-success">
+            {{ successMessage }}
+        </div>
+    } @else {
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form [formGroup]="vacanteForm" (ngSubmit)="guardarCambios()">
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre de la vacante*</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="nombre"
+                                    formControlName="nombre"
+                                    [ngClass]="{'is-invalid': nombreInvalid}"
+                                    placeholder="Ej: Desarrollador Frontend Senior"
+                                >
+                                @if (nombreInvalid) {
+                                    <div class="invalid-feedback">
+                                        @if (vacanteForm.get('nombre')?.errors?.['required']) {
+                                            El nombre es obligatorio
+                                        } @else if (vacanteForm.get('nombre')?.errors?.['minlength']) {
+                                            El nombre debe tener al menos 3 caracteres
+                                        }
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label">Descripción breve*</label>
+                                <textarea
+                                    class="form-control"
+                                    id="descripcion"
+                                    formControlName="descripcion"
+                                    [ngClass]="{'is-invalid': descripcionInvalid}"
+                                    placeholder="Breve descripción que aparecerá en el listado de vacantes"
+                                    rows="2"
+                                ></textarea>
+                                @if (descripcionInvalid) {
+                                    <div class="invalid-feedback">
+                                        @if (vacanteForm.get('descripcion')?.errors?.['required']) {
+                                            La descripción es obligatoria
+                                        } @else if (vacanteForm.get('descripcion')?.errors?.['minlength']) {
+                                            La descripción debe tener al menos 10 caracteres
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="salario" class="form-label">Salario anual (€)*</label>
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    id="salario"
+                                    formControlName="salario"
+                                    [ngClass]="{'is-invalid': salarioInvalid}"
+                                    placeholder="Ej: 35000"
+                                >
+                                @if (salarioInvalid) {
+                                    <div class="invalid-feedback">
+                                        @if (vacanteForm.get('salario')?.errors?.['required']) {
+                                            El salario es obligatorio
+                                        } @else if (vacanteForm.get('salario')?.errors?.['min']) {
+                                            El salario debe ser un valor positivo
+                                        }
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="categoria" class="form-label">Categoría*</label>
+                                <select
+                                    class="form-select"
+                                    id="categoria"
+                                    formControlName="id_Categoria"
+                                    [ngClass]="{'is-invalid': categoriaInvalid}"
+                                >
+                                    <option value="0" disabled>Selecciona una categoría</option>
+                                    @for (categoria of categorias; track categoria.id_categoria) {
+                                        <option [value]="categoria.id_categoria">{{ categoria.nombre }}</option>
+                                    }
+                                </select>
+                                @if (categoriaInvalid) {
+                                    <div class="invalid-feedback">
+                                        Debes seleccionar una categoría
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="form-check mb-3">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    id="destacado"
+                                    formControlName="destacado"
+                                >
+                                <label class="form-check-label" for="destacado">
+                                    Destacar esta vacante
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="detalles" class="form-label">Detalles de la vacante*</label>
+                        <textarea
+                            class="form-control"
+                            id="detalles"
+                            formControlName="detalles"
+                            [ngClass]="{'is-invalid': detallesInvalid}"
+                            placeholder="Describe detalladamente el puesto, requisitos, responsabilidades, etc."
+                            rows="6"
+                        ></textarea>
+                        @if (detallesInvalid) {
+                            <div class="invalid-feedback">
+                                @if (vacanteForm.get('detalles')?.errors?.['required']) {
+                                    Los detalles son obligatorios
+                                } @else if (vacanteForm.get('detalles')?.errors?.['minlength']) {
+                                    Los detalles deben tener al menos 20 caracteres
+                                }
+                            </div>
+                        }
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="imagen" class="form-label">URL de imagen (opcional)</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="imagen"
+                            formControlName="imagen"
+                            placeholder="URL de una imagen representativa para la vacante"
+                        >
+                        <div class="form-text">Deja en blanco para usar la imagen por defecto.</div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <button type="button" class="btn btn-secondary" (click)="cancelar()">
+                            <i class="bi bi-x-circle me-1"></i> Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-warning" [disabled]="vacanteForm.invalid || cargando">
+                            <i class="bi bi-save me-1"></i> Guardar cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="alert alert-info mt-4">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-info-circle-fill me-2 fs-4"></i>
+                <div>
+                    <strong>Importante:</strong> Todos los campos marcados con * son obligatorios.
+                    <br>Una vez actualizada, podrás ver los cambios en el listado de vacantes.
+                </div>
+            </div>
+        </div>
+    }
+</div>

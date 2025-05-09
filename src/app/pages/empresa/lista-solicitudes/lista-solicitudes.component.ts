@@ -33,22 +33,66 @@ export class ListaSolicitudesComponent implements OnInit {
 
 
   ngOnInit(): void {
-
     // obtenemos el id de la vacante desde la url
     this.route.params.subscribe(params => {
-      this.vacanteId = +params['id']; //convertir a numero
-      this.loadVacante();
-      this.loadSolicitudes();
-    });
+      console.log('Parámetros de ruta recibidos:', params);
+     // Verificar si existe el parámetro 'id'
+    if (!params['id']) {
+      this.error = 'No se ha proporcionado un ID de vacante';
+      console.error('Falta el parámetro ID en la ruta');
+      return;
+    }
+
+    // Verificamos si el ID es ':id' (literal) y evitamos procesarlo
+    if (params['id'] === ':id') {
+      this.error = 'ID de vacante no válido';
+      console.error('ID literal detectado en lugar de un valor numérico');
+      return;
+    }
+    
+    // Convertir el parámetro a número y verificar que sea válido
+    const id = Number(params['id']);
+    
+    if (isNaN(id)) {
+      this.error = 'El ID de vacante proporcionado no es válido';
+      console.error('ID de vacante inválido (NaN):', params['id']);
+      return;
+    }
+    
+    // Si llegamos aquí, el ID es válido
+    this.vacanteId = id;
+    console.log('ID de vacante válido:', this.vacanteId);
+    
+    // Proceder a cargar los datos
+    this.loadVacante();
+    this.loadSolicitudes();
+  });
   }
 
   loadVacante(): void {
+    // Verificación adicional por seguridad
+    if (this.vacanteId <= 0) {
+      this.error = 'ID de vacante inválido';
+      return;
+    }
+    
     this.cargando = true;
+    this.error = null; // Limpiar errores anteriores
+    
     this.vService.getVacanteById(this.vacanteId)
       .pipe(
         catchError(error => {
           console.error('Error al cargar la vacante:', error);
-          this.error = 'No se pudo cargar la información de la vacante';
+          
+          // Manejar diferentes tipos de errores HTTP
+          if (error.status === 403) {
+            this.error = 'No tienes permisos para acceder a esta vacante';
+          } else if (error.status === 404) {
+            this.error = 'La vacante no existe o ha sido eliminada';
+          } else {
+            this.error = 'No se pudo cargar la información de la vacante';
+          }
+          
           return of(undefined);
         }),
         finalize(() => this.cargando = false)
@@ -56,11 +100,18 @@ export class ListaSolicitudesComponent implements OnInit {
       .subscribe(vacante => {
         if (vacante) {
           this.vacante = vacante;
+        } else if (!this.error) {
+          // Si no tenemos vacante pero tampoco error (raro, pero posible)
+          this.error = 'No se encontró información de la vacante';
         }
       });
   }
-
   loadSolicitudes(): void {
+    // Verificación adicional por seguridad
+    if (this.vacanteId <= 0) {
+      this.error = 'ID de vacante inválido';
+      return;
+    }
     this.cargando = true;
     // obtenemos todas las solicitudes para esta vacante
     this.sService.getSolicitudesByVacanteId(this.vacanteId)

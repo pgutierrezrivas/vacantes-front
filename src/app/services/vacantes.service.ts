@@ -22,10 +22,10 @@ export class VacantesService {
     return this.http.get<Vacante>(`${this.apiUrl}/uno/${id}`);
   }
 
-  getVacantesByEmpresa(empresaId: number): Observable<Vacante[]> {
+  getVacantesByEmpresa(id_empresa: number): Observable<Vacante[]> {
     // mirar si existe este endpoint en el back
     // Si no existe, se debe implementar en VacanteController
-    return this.http.get<Vacante[]>(`${this.apiUrl}/empresa/${empresaId}`);
+    return this.http.get<Vacante[]>(`${this.apiUrl}/empresa/${id_empresa}`); //idEmpresa (antes)
   }
 
   crearVacante(vacante: Vacante): Observable<Vacante> {
