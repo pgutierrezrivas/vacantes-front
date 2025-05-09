@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { Usuario } from '../../../interfaces/usuario';
 import { AnimacionTextoComponent } from "../../../shared/animacion-texto/animacion-texto.component";
 import { Empresa } from '../../../interfaces/empresa';
+import { Vacante } from '../../../interfaces/vacante';
 
 @Component({
   selector: 'app-dashboard-empresa',
@@ -10,10 +11,13 @@ import { Empresa } from '../../../interfaces/empresa';
   templateUrl: './dashboard-empresa.component.html',
   styleUrl: './dashboard-empresa.component.css'
 })
+
+
+
 export class DashboardEmpresaComponent implements OnInit {
 
   saludosFrases: string[] = [];
-  
+  vacantes: Vacante[] = [];     
   @Input() miEmpresa!: Empresa;
   @Input() miUsuario!: Usuario;
 
